@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>TPAC 학습노트</title>
+<style>
+  :root{
+    --ink:#1c2b39;
+    --paper:#eef0ea;
+    --card:#ffffff;
+    --line:#d8dcd3;
+    --pass:#2f6e57;
+    --fail:#a83a1d;
+    --gold:#b8892b;
+    --muted:#5b6570;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:env(safe-area-inset-bottom);
+    min-height:100vh;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 16px 40px;}
+
+  header{
+    padding:20px 16px 14px;
+    border-bottom:2px solid var(--ink);
+    background:var(--card);
+  }
+  header .row{max-width:640px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;}
+  h1{
+    font-family:"Noto Serif KR","Nanum Myeongjo",serif;
+    font-weight:700;
+    font-size:22px;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .datebadge{
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:11px;
+    color:var(--muted);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:3px 7px;
+    white-space:nowrap;
+  }
+  .subtitle{
+    max-width:640px;margin:6px auto 0;
+    font-size:12.5px;color:var(--muted);
+    font-family:"SFMono-Regular",Consolas,monospace;
+    letter-spacing:0.01em;
+  }
+
+  nav.tabs{
+    display:flex;
+    max-width:640px;margin:0 auto;
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:10;
+  }
+  nav.tabs button{
+    flex:1;
+    padding:13px 4px;
+    background:none;border:none;
+    font-size:14.5px;font-weight:600;
+    color:var(--muted);
+    border-bottom:3px solid transparent;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  nav.tabs button.active{color:var(--ink);border-bottom-color:var(--ink);}
+
+  main{padding-top:18px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+
+  .chiprow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .chip{
+    padding:8px 13px;
+    border:1.5px solid var(--ink);
+    border-radius:999px;
+    background:var(--card);
+    color:var(--ink);
+    font-size:13px;font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+    white-space:nowrap;
+  }
+  .chip.active{background:var(--ink);color:#fff;}
+
+  .sectionlabel{
+    font-size:11px;letter-spacing:0.06em;color:var(--muted);
+    font-family:"SFMono-Regular",Consolas,monospace;
+    text-transform:uppercase;margin:0 0 8px;
+  }
+
+  .countrow{display:flex;gap:8px;margin-bottom:16px;}
+  .countbtn{
+    flex:1;padding:10px 0;
+    border:1.5px solid var(--line);
+    background:var(--card);border-radius:6px;
+    font-weight:700;font-size:14px;color:var(--ink);
+    cursor:pointer;font-family:inherit;
+  }
+  .countbtn.active{border-color:var(--ink);background:var(--ink);color:#fff;}
+
+  .bigbtn{
+    width:100%;padding:15px 0;
+    background:var(--ink);color:#fff;
+    border:none;border-radius:8px;
+    font-size:16px;font-weight:700;
+    font-family:inherit;cursor:pointer;
+    letter-spacing:-0.01em;
+  }
+  .bigbtn:active{opacity:0.85;}
+  .bigbtn.secondary{background:var(--card);color:var(--ink);border:1.5px solid var(--ink);}
+  .bigbtn.fail{background:var(--fail);}
+
+  .progresswrap{
+    display:flex;align-items:center;gap:10px;margin-bottom:16px;
+    font-family:"SFMono-Regular",Consolas,monospace;font-size:12.5px;color:var(--muted);
+  }
+  .progressbar{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
+  .progressbar > div{height:100%;background:var(--ink);}
+
+  .qtag{
+    display:inline-block;font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:11px;color:var(--muted);border:1px solid var(--line);
+    border-radius:3px;padding:2px 7px;margin-bottom:10px;
+  }
+  .qtext{font-size:16px;line-height:1.55;font-weight:600;margin:0 0 16px;}
+
+  .choice{
+    display:flex;align-items:flex-start;gap:10px;
+    width:100%;text-align:left;
+    padding:13px 14px;margin-bottom:9px;
+    border:1.5px solid var(--line);border-radius:8px;
+    background:var(--card);
+    font-family:inherit;font-size:14.5px;line-height:1.45;
+    color:var(--ink);cursor:pointer;
+    min-height:48px;
+  }
+  .choice .num{
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-weight:700;color:var(--muted);flex-shrink:0;
+  }
+  .choice.selected{border-color:var(--ink);border-width:2px;background:#f7f8f5;}
+  .choice.correct{border-color:var(--pass);background:#eaf3ef;}
+  .choice.correct .num{color:var(--pass);}
+  .choice.wrong{border-color:var(--fail);background:#f8ece7;}
+  .choice.wrong .num{color:var(--fail);}
+  .choice:disabled, .choice[data-locked="1"]{cursor:default;}
+
+  .explain{
+    margin-top:12px;padding:12px 14px;
+    background:#f7f8f5;border-left:3px solid var(--ink);
+    border-radius:4px;font-size:13.5px;line-height:1.55;color:var(--muted);
+  }
+
+  .navrow{display:flex;gap:10px;margin-top:16px;}
+  .navrow .bigbtn{flex:1;}
+
+  /* stamp */
+  .stampwrap{display:flex;justify-content:center;margin:8px 0 20px;}
+  .stamp{
+    width:132px;height:132px;border-radius:50%;
+    border:3px double var(--pass);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:rotate(-9deg);
+    color:var(--pass);
+    font-family:"Noto Serif KR","Nanum Myeongjo",serif;
+  }
+  .stamp.fail{border-color:var(--fail);color:var(--fail);}
+  .stamp .top{font-size:10px;letter-spacing:0.15em;font-family:"SFMono-Regular",Consolas,monospace;}
+  .stamp .score{font-size:30px;font-weight:900;line-height:1.1;margin:2px 0;}
+  .stamp .tier{font-size:13px;font-weight:700;letter-spacing:0.05em;}
+
+  .resulthead{text-align:center;margin-bottom:4px;}
+  .resulthead .big{font-size:15px;font-weight:700;color:var(--muted);}
+
+  .breakrow{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;
+  }
+  .breakrow:last-child{border-bottom:none;}
+  .breakbar{flex:1;height:6px;background:var(--line);border-radius:3px;margin:0 10px;overflow:hidden;}
+  .breakbar>div{height:100%;background:var(--ink);}
+
+  .note-card{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:14px;margin-bottom:12px;
+  }
+  .note-card .qtag{margin-bottom:8px;}
+  .note-line{display:flex;gap:8px;font-size:13.5px;line-height:1.5;margin-bottom:5px;}
+  .note-line.wrong{color:var(--fail);}
+  .note-line.correct{color:var(--pass);}
+  .note-meta{font-family:"SFMono-Regular",Consolas,monospace;font-size:11px;color:var(--muted);margin-top:8px;}
+
+  .statbig{text-align:center;padding:10px 0 18px;}
+  .statbig .num{font-size:44px;font-weight:900;font-family:"Noto Serif KR",serif;}
+  .statbig .lbl{font-size:12.5px;color:var(--muted);font-family:"SFMono-Regular",Consolas,monospace;}
+
+  .empty{
+    text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;line-height:1.6;
+  }
+
+  textarea.memoinput{
+    width:100%;min-height:90px;padding:12px 13px;
+    border:1.5px solid var(--line);border-radius:8px;
+    font-family:inherit;font-size:14.5px;line-height:1.5;color:var(--ink);
+    resize:vertical;margin-bottom:12px;
+  }
+  textarea.memoinput:focus{outline:none;border-color:var(--ink);}
+  .memo-card{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:14px;margin-bottom:12px;
+  }
+  .memo-card .memotext{font-size:14px;line-height:1.6;white-space:pre-wrap;margin:8px 0 10px;}
+  .memo-card .memofoot{display:flex;justify-content:space-between;align-items:center;}
+  .delbtn{
+    background:none;border:none;color:var(--fail);font-size:12.5px;
+    font-family:inherit;cursor:pointer;text-decoration:underline;padding:2px;
+  }
+
+  .syncbar{
+    max-width:640px;margin:10px auto 0;display:flex;align-items:center;gap:10px;
+    justify-content:space-between;
+  }
+  .syncstate{
+    font-family:"SFMono-Regular",Consolas,monospace;font-size:11px;color:var(--muted);
+  }
+  .syncstate.ok{color:var(--pass);}
+  .syncstate.err{color:var(--fail);}
+  .syncbtn{
+    border:1px solid var(--line);background:var(--card);color:var(--ink);
+    border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:600;
+    font-family:inherit;cursor:pointer;white-space:nowrap;
+  }
+  .syncbtn:active{opacity:.8;}
+
+  .footlink{
+    display:block;text-align:center;margin-top:18px;
+    font-size:12.5px;color:var(--muted);text-decoration:underline;
+    background:none;border:none;font-family:inherit;cursor:pointer;width:100%;padding:8px;
+  }
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header>
+  <div class="row">
+    <h1>TPAC 학습노트</h1>
+    <span class="datebadge" id="dateBadge">2026.08.16</span>
+  </div>
+  <div class="subtitle">글로벌기준 · 국내제도 · 위험과 방법 · RA · CDD · CTR·STR</div>
+  <div class="syncbar" id="syncBar">
+    <span class="syncstate" id="syncState">로컬 저장 중</span>
+    <button class="syncbtn" id="syncBtn" onclick="handleAuthClick()">구글 드라이브 연결</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tabbtn active" data-tab="quiz">모의고사</button>
+  <button class="tabbtn" data-tab="notes">오답노트</button>
+  <button class="tabbtn" data-tab="memo">핵심정리</button>
+  <button class="tabbtn" data-tab="stats">통계</button>
+</nav>
+
+<div class="wrap">
+<main>
+  <div id="tab-quiz"></div>
+  <div id="tab-notes" style="display:none;"></div>
+  <div id="tab-memo" style="display:none;"></div>
+  <div id="tab-stats" style="display:none;"></div>
+</main>
+</div>
+
+<script>
+/* ---------- 문제 은행 ---------- */
+const BANK = [
+{id:'G1',subject:'글로벌기준',q:'FATF(국제자금세탁방지기구)가 설립된 연도와 최초 설립 목적으로 옳은 것은?',ch:['1989년, 마약자금 방지','1995년, 테러자금 방지','2001년, 대량살상무기 확산 방지','1988년, 조세회피 방지','2005년, 가상자산 규제'],a:0,ex:'FATF는 1989년 마약자금 세탁을 방지할 목적으로 설립됐다. 이후 관할이 점차 확대됐다.'},
+{id:'G2',subject:'글로벌기준',q:'자금세탁의 정의에 관한 국제법적 근거가 되는 협약 두 가지는?',ch:['바젤협약·비엔나협약','비엔나협약·팔레모협약','팔레모협약·메리다협약','바젤협약·메리다협약','비엔나협약·메리다협약'],a:1,ex:'비엔나협약(1988, 마약)과 팔레모협약(2000, 초국가조직범죄)이 자금세탁 정의의 국제법적 토대다.'},
+{id:'G3',subject:'글로벌기준',q:'FATF의 관할이 확대되어 온 순서로 옳은 것은?',ch:['테러자금→마약→중대범죄→WMD','마약→중대범죄→테러자금→WMD','중대범죄→마약→WMD→테러자금','WMD→마약→테러자금→중대범죄','마약→테러자금→중대범죄→WMD'],a:1,ex:'마약(1989)→중대범죄(1996)→테러자금(2001)→대량살상무기확산(2012) 순으로 확대됐다.'},
+{id:'G4',subject:'글로벌기준',q:'자금세탁의 일반적 3단계 진행 순서로 옳은 것은?',ch:['은폐→예치→통합','예치(배치)→은폐(반복)→통합(합법화)','통합→예치→은폐','배치→통합→은폐','은폐→통합→배치'],a:1,ex:'예치(Placement)→은폐(Layering)→통합(Integration) 순서가 표준 3단계 모델이다.'},
+{id:'G5',subject:'글로벌기준',q:'다음 중 자금세탁의 특성으로 옳지 않은 것은?',ch:['국제범죄성','조직범죄성','화이트칼라형','개인범죄성','반복성'],a:3,ex:'자금세탁은 일반적으로 조직범죄성을 띠며, 개인범죄성은 해당 특성으로 보지 않는다.'},
+{id:'G6',subject:'글로벌기준',q:'FATF 40개 권고사항 중 "법인의 실제소유자 확인"을 다루는 조항 번호는?',ch:['20번','24번','29번','16번','10번'],a:1,ex:'24번 권고사항이 법인·법률관계의 실제소유자(투명성) 관련 조항이다.'},
+{id:'G7',subject:'글로벌기준',q:'FATF 40개 권고사항 중 "의심거래보고(STR)"를 다루는 조항 번호는?',ch:['16번','20번','24번','29번','35번'],a:1,ex:'20번 권고사항이 의심거래보고 의무를 규정한다.'},
+{id:'G8',subject:'글로벌기준',q:'FATF 40개 권고사항 중 "금융정보분석원(FIU)"의 설치·역할을 다루는 조항 번호는?',ch:['10번','16번','20번','24번','29번'],a:4,ex:'29번 권고사항이 FIU 설립·기능에 관한 조항이다.'},
+{id:'G9',subject:'글로벌기준',q:'FATF 국제기준상 금융회사의 거래기록·CDD 자료 보관 최소기간은?',ch:['3년','5년','7년','10년','기간 제한 없음'],a:1,ex:'FATF 권고는 거래기록·고객확인자료를 최소 5년간 보관하도록 요구한다.'},
+{id:'G10',subject:'글로벌기준',q:'FATF 국제기준상 일회성 거래에 대한 CDD 적용 기준금액(현금거래 기준)은?',ch:['USD/EUR 5,000','USD/EUR 10,000','USD/EUR 15,000','USD/EUR 20,000','USD/EUR 30,000'],a:2,ex:'FATF 기준 일회성 거래는 미화(또는 유로화) 15,000 이상일 때 CDD를 적용한다.'},
+{id:'G11',subject:'글로벌기준',q:'우리나라가 FATF 4차 라운드 상호평가를 받은 연도는?',ch:['2015년','2017년','2019년','2021년','2023년'],a:2,ex:'한국은 2019년 FATF 4차 라운드 상호평가를 받았다.'},
+{id:'G12',subject:'글로벌기준',q:'EU 자금세탁방지지침(AMLD) 중 위험기반접근법(RBA)을 처음 도입한 차수는?',ch:['1차(1991)','2차(2001)','3차(2005)','4차(2015)','5차(2018)'],a:2,ex:'EU AMLD 3차(2005)에서 위험기반접근법(RBA)이 처음 도입됐다.'},
+
+{id:'D1',subject:'국내제도',q:'우리나라 금융정보분석원(FIU)이 설립된 연도는?',ch:['1998년','2001년','2005년','2008년','2013년'],a:1,ex:'금융정보분석원(KoFIU)은 2001년에 설립됐다.'},
+{id:'D2',subject:'국내제도',q:'금융정보분석원(FIU)의 정식 명칭은?',ch:['한국자금세탁방지원','금융정보분석원','금융감독정보원','자금세탁방지센터','금융보안분석원'],a:1,ex:'정식 명칭은 금융정보분석원(Korea Financial Intelligence Unit, KoFIU)이다.'},
+{id:'D3',subject:'국내제도',q:'국내 STR·CTR 보고의무의 근거가 되는 법률의 정식 명칭은?',ch:['자금세탁방지법','특정 금융거래정보의 보고 및 이용 등에 관한 법률','범죄수익은닉의 규제 및 처벌 등에 관한 법률','금융실명거래 및 비밀보장에 관한 법률','전자금융거래법'],a:1,ex:'약칭 "특정금융정보법(특금법)"의 정식 명칭이다. "범죄수익은닉규제법"은 처벌·몰수를 다루는 별개 법률이다.'},
+{id:'D4',subject:'국내제도',q:'자금세탁방지제도상 "전제범죄"는 몇 개 법률·몇 종으로 규정되어 있는가?',ch:['30개 법률 60종','54개 법률 116종','70개 법률 150종','20개 법률 40종','100개 법률 200종'],a:1,ex:'범죄수익은닉규제법 별표에 54개 법률 116종의 전제범죄가 규정되어 있다.'},
+{id:'D5',subject:'국내제도',q:'특정금융정보법(특금법)과 범죄수익은닉규제법의 역할 구분으로 옳은 것은?',ch:['특금법=처벌·몰수, 범죄수익은닉규제법=보고·FIU','특금법=보고·FIU, 범죄수익은닉규제법=처벌·몰수','두 법률 모두 보고의무만 규정','두 법률 모두 처벌만 규정','특금법은 형사법, 범죄수익은닉규제법은 행정법'],a:1,ex:'특금법은 STR·CTR 등 보고체계와 FIU를, 범죄수익은닉규제법은 처벌·몰수를 규정한다.'},
+{id:'D6',subject:'국내제도',q:'금융거래 시 타인 명의를 이용한 차명거래를 제재하는 근거 법률은?',ch:['특정금융정보법','범죄수익은닉규제법','금융실명거래 및 비밀보장에 관한 법률','전자금융거래법','자본시장법'],a:2,ex:'차명거래 제재는 금융실명법에 근거하며, 5년 이하 징역 또는 5천만원 이하 벌금에 처해질 수 있다.'},
+{id:'D7',subject:'국내제도',q:'고객이 실제소유자 확인 등 고객확인(CDD)에 응하지 않을 경우, 금융회사가 취해야 할 조치로 옳은 것은?',ch:['정상 거래로 처리','신규거래 거절 및 기존거래 종료, STR 검토','수수료 할증 부과 후 거래 지속','상급기관 승인 시에만 거래 지속','계좌를 일시 정지만 하고 유지'],a:1,ex:'고객확인 거부 시 신규거래 거절, 필요 시 기존거래 종료, 아울러 STR 해당 여부를 검토해야 한다.'},
+{id:'D8',subject:'국내제도',q:'다음 중 특정금융정보법(특금법)이 직접 규정하는 사항이 아닌 것은?',ch:['의심거래보고(STR)','고액현금거래보고(CTR)','고객확인의무(CDD)','금융정보분석원(FIU) 설치','범죄수익의 몰수·추징'],a:4,ex:'범죄수익의 몰수·추징은 범죄수익은닉규제법의 소관이다.'},
+{id:'D9',subject:'국내제도',q:'다음 중 금융회사의 자금세탁방지(AML) 관련 제도가 아닌 것은?',ch:['고객확인제도(CDD)','의심거래보고(STR)','고액현금거래보고(CTR)','고객정보 삭제 의무','내부통제기준 수립'],a:3,ex:'"고객정보 삭제 의무"라는 AML 제도는 존재하지 않는다. 오히려 자료보관 의무(최소 5년)가 있다.'},
+{id:'D10',subject:'국내제도',q:'의심거래보고(STR) 의무를 규정하고 있는 법률은?',ch:['금융실명법','특정금융정보법','범죄수익은닉규제법','전자금융거래법','신용정보법'],a:1,ex:'STR 보고의무는 특정금융정보법(특금법)에 규정되어 있다.'},
+{id:'D11',subject:'국내제도',q:'금융회사 직원이 선의로 의심거래를 보고한 경우, 그 책임에 관한 설명으로 옳은 것은?',ch:['형사·민사상 책임을 진다','형사·민사상 책임이 면제된다','형사책임만 면제된다','민사책임만 면제된다','보고 내용에 따라 책임 여부가 달라진다'],a:1,ex:'선의로 STR을 보고한 경우 형사·민사상 책임이 면제된다. 다만 보고사실 누설 시에는 별도 제재 대상이다.'},
+{id:'D12',subject:'국내제도',q:'법인 실제소유자 판별 1단계 기준으로 옳은 것은?',ch:['지분율 10% 이상 소유 자연인','지분율 25% 이상 소유 자연인','지분율 50% 이상 소유 자연인','대표이사 전원','최대주주 1인'],a:1,ex:'1단계는 지분율 25% 이상을 소유한 자연인을 실제소유자로 본다.'},
+{id:'D13',subject:'국내제도',q:'실제소유자 판별 3단계 원칙의 순서로 옳은 것은?',ch:['대표자→사실상 지배자→25%이상 지분자','25%이상 지분자→사실상 지배자→대표이사','사실상 지배자→25%이상 지분자→대표이사','대표이사→25%이상 지분자→사실상 지배자','25%이상 지분자→대표이사→사실상 지배자'],a:1,ex:'1단계 25% 이상 지분 자연인 → 2단계 사실상 지배자 → 3단계 대표이사(고위경영진) 순으로 판별한다.'},
+{id:'D14',subject:'국내제도',q:'실제소유자 확인이 면제될 수 있는 대상으로 옳지 않은 것은?',ch:['상장법인','국가·공공기관','금융회사','일반 비상장 영리법인','금융회사에 준하는 기관'],a:3,ex:'일반 비상장 영리법인은 면제 대상이 아니며 실제소유자 확인 절차를 거쳐야 한다.'},
+{id:'D15',subject:'국내제도',q:'특정금융정보법(특금법) 위반 시 과태료 상한으로 옳은 것은?',ch:['1천만원','3천만원','5천만원','1억원','3억원'],a:3,ex:'특금법 제20조에 따라 위반 건당 최대 1억원의 과태료가 부과될 수 있다.'},
+{id:'D16',subject:'국내제도',q:'사업자등록번호 중간번호(4~5번째 자리)가 "81"인 경우 일반적으로 어떤 유형에 해당하는가?',ch:['개인사업자(과세)','영리법인 본점','비영리법인 본·지점','국가·지방자치단체','외국법인 본·지점'],a:1,ex:'중간번호 81은 영리법인 본점을 나타낸다(참고용, 2차 확인 필요).'},
+{id:'D17',subject:'국내제도',q:'사업자등록번호 중간번호가 "83"인 경우 면제 가능성이 높은 이유로 옳은 것은?',ch:['외국법인이기 때문','국가·지방자치단체·지자체조합에 해당하기 때문','상장법인이기 때문','금융회사이기 때문','비영리법인이기 때문'],a:1,ex:'중간번호 83은 국가·지방자치단체·지방자치단체조합을 나타내며 면제 가능성이 높으나 반드시 2차 확인이 필요하다.'},
+
+{id:'R1',subject:'위험과 방법',q:'"스머핑(구조화, Structuring)"에 대한 설명으로 가장 적절한 것은?',ch:['거액을 한 번에 송금하는 기법','보고 기준금액을 회피하기 위해 거래를 소액으로 분할하는 기법','해외 여러 국가를 경유해 송금하는 기법','가상자산으로 자금을 전환하는 기법','대출을 이용해 자금출처를 위장하는 기법'],a:1,ex:'스머핑은 CTR 등 보고 기준금액을 피하려고 거래를 여러 건의 소액으로 쪼개는 대표적 자금세탁 기법이다.'},
+{id:'R2',subject:'위험과 방법',q:'위장회사(Shell company)와 전위사업체(Front business)를 구분하는 핵심 기준은?',ch:['설립 국가','매출 규모','물리적 실체(실질 영업활동)의 유무','임직원 수','자본금 규모'],a:2,ex:'위장회사는 물리적 실체·실질 영업이 없는 반면, 전위사업체는 실제 영업을 하며 자금세탁 통로로도 쓰인다는 점에서 구분된다.'},
+{id:'R3',subject:'위험과 방법',q:'FATF가 지정한 고위험 대응조치 국가(자금세탁방지 체계 미비)로 알려진 국가는?',ch:['중국, 러시아','이란, 북한','미국, 영국','일본, 싱가포르','베트남, 태국'],a:1,ex:'FATF는 이란·북한을 대응조치가 필요한 고위험국으로 지정해왔다.'},
+{id:'R4',subject:'위험과 방법',q:'무역기반 자금세탁(TBML)의 대표적 수법으로 옳은 것은?',ch:['현금을 소액으로 분할 입금','수출입 송장(인보이스) 금액을 과대·과소 계상','가상자산 믹싱서비스 이용','차명계좌 다수 개설','보험상품 조기 해지'],a:1,ex:'TBML은 무역거래의 송장 금액을 조작(과대·과소 청구)해 가치를 이전하는 방식이 대표적이다.'},
+{id:'R5',subject:'위험과 방법',q:'정치적 주요인물(PEP, Politically Exposed Person)에 대한 설명으로 옳은 것은?',ch:['모든 공무원을 의미한다','고위공직자 및 그 가족·측근을 포함하며 통상 EDD 대상이다','금융회사 임직원만을 의미한다','과거 이력과 무관하게 일반고객으로 취급된다','국내 거주자에게만 적용된다'],a:1,ex:'PEP는 고위공직자와 그 가족·측근을 포괄하며, 부패·자금세탁 위험이 높아 통상 강화된 고객확인(EDD) 대상이 된다.'},
+{id:'R6',subject:'위험과 방법',q:'가상자산을 이용한 신종 자금세탁 수법으로 흔히 언급되는 것은?',ch:['수표 발행','환전소 창구 이용','믹싱(Mixing)·체인호핑(Chain-hopping)','신용장 개설','정기예금 가입'],a:2,ex:'믹싱서비스나 여러 코인을 바꿔가며 이동하는 체인호핑은 자금 추적을 어렵게 하는 신종 수법으로 지목된다.'},
+
+{id:'RA1',subject:'위험평가',q:'자금세탁·테러자금조달 위험평가의 3요소로 옳은 것은?',ch:['위협·취약성·결과','위협·통제·비용','기회·수단·동기','규모·빈도·강도','발생가능성·심각성·긴급성'],a:0,ex:'위험은 위협(Threats)+취약성(Vulnerabilities)+결과(Consequences)의 조합으로 평가한다.'},
+{id:'RA2',subject:'위험평가',q:'위험기반접근법(RBA, Risk-Based Approach)의 핵심 원칙으로 옳은 것은?',ch:['모든 고객에게 동일한 수준의 확인 절차 적용','고위험에는 자원을 집중하고 저위험은 절차를 간소화','저위험 고객은 확인을 생략','위험도 평가 없이 규모로만 판단','신규 고객만 위험평가 대상'],a:1,ex:'RBA는 고위험군에 자원과 통제를 집중하고, 저위험군은 절차를 간소화하는 것이 핵심이다.'},
+{id:'RA3',subject:'위험평가',q:'금융회사가 위험평가를 새로 실시해야 하는 시점으로 가장 적절한 것은?',ch:['감독당국이 요구할 때만','정기적으로, 그리고 신상품·신규 채널 도입 등 중대한 변화가 있을 때','최초 영업 개시 시 1회만','고객 민원이 발생했을 때만','회계연도 종료 후 1회만'],a:1,ex:'위험평가는 정기적으로 실시하며, 신상품·신규 서비스·신규 채널 도입 등 위험에 영향을 줄 수 있는 변화가 있을 때도 재실시해야 한다.'},
+
+{id:'C1',subject:'CDD',q:'고객확인제도(CDD)가 포괄하는 핵심 절차로 옳은 것은?',ch:['신원확인만 수행','신원확인 + 실제소유자 확인 + 거래목적 파악','거래목적 파악만 수행','실제소유자 확인만 수행','계좌 개설 승인 여부 결정만'],a:1,ex:'CDD는 고객 신원확인, 실제소유자 확인, 거래목적 파악을 포괄하는 절차다.'},
+{id:'C2',subject:'CDD',q:'강화된 고객확인(EDD) 시 추가로 확인하는 항목이 아닌 것은?',ch:['직업','거래자금의 출처','거래목적','재산현황','가족관계증명서'],a:4,ex:'EDD 추가확인 항목은 직업·자금출처·거래목적·재산현황 등이며, 가족관계증명서는 통상적인 EDD 확인항목이 아니다.'},
+{id:'C3',subject:'CDD',q:'간소화된 고객확인(SDD)을 적용할 수 없는 대상으로 옳은 것은?',ch:['상장법인','공공기관','FATF 비준수 국가의 국민','국내 금융회사','정부기관'],a:2,ex:'FATF 국제기준을 준수하지 않는 국가의 국민에게는 SDD를 적용할 수 없고 오히려 강화된 확인이 필요하다.'},
+{id:'C4',subject:'CDD',q:'법인의 실제소유자에 대한 정의로 가장 적절한 것은?',ch:['등기부상 대표이사','최종적으로 지배지분을 보유한 자연인','최대 매출을 올리는 임원','법인 설립자','회계법인이 지정한 자'],a:1,ex:'실제소유자는 형식적 명의와 무관하게 최종적으로 지배지분을 보유한 자연인을 의미한다.'},
+{id:'C5',subject:'CDD',q:'고객확인(CDD) 시 신원확인의 일반적 방법으로 옳은 것은?',ch:['구두 진술만으로 확인','실명확인증표(주민등록증 등)로 확인','거래금액으로 추정','고객의 자진신고서만으로 확인','타인의 확인으로 대체'],a:1,ex:'신원확인은 주민등록증 등 실명확인증표를 통해 이루어지는 것이 원칙이다.'},
+{id:'C6',subject:'CDD',q:'다음 중 통상 고위험 고객군으로 분류되는 경우가 아닌 것은?',ch:['정치적 주요인물(PEP)','비거주 외국인','현금집중업종 종사자','급여이체용 신규 급여계좌 개설 근로자','고위험국가 거주 고객'],a:3,ex:'급여계좌 개설처럼 정형화된 저위험 거래는 통상 고위험군으로 분류되지 않는다.'},
+{id:'C7',subject:'CDD',q:'CDD의 "계속고객확인(지속적 모니터링)"에 대한 설명으로 옳은 것은?',ch:['최초 거래 개시 시 1회만 수행하면 된다','거래관계가 지속되는 동안 정기적으로 정보를 재확인해야 한다','고객이 요청할 때만 수행한다','5년마다 1회만 수행한다','고위험 고객에게는 적용하지 않는다'],a:1,ex:'CDD는 최초 확인에 그치지 않고 거래관계 지속 중에도 정기적으로 정보를 재확인해야 한다.'},
+{id:'C8',subject:'CDD',q:'고객확인 정보를 재이행(갱신)해야 하는 시점으로 가장 적절한 것은?',ch:['고객이 사망했을 때만','고객정보 변경을 인지했거나 위험도가 변경됐을 때','회계연도 종료 시에만','금리가 변동했을 때','상품이 만기됐을 때만'],a:1,ex:'기존 고객정보의 변경을 인지하거나 위험평가 결과 위험도가 변경된 경우 CDD를 재이행해야 한다.'},
+{id:'C9',subject:'CDD',q:'강화된 고객확인(EDD)이 적용되는 사례로 가장 적절한 것은?',ch:['정기 급여이체 계좌','고위험국가에 거주하는 신규 고객','국내 상장법인과의 일반 거래','소액 정기적금 가입','공공요금 자동이체 등록'],a:1,ex:'고위험국가 거주 고객, PEP, 고액현금거래 고객 등은 EDD 적용 대상이다.'},
+
+{id:'S1',subject:'CTR·STR',q:'고액현금거래보고(CTR)의 현행 기준금액으로 옳은 것은?',ch:['5백만원','1천만원','2천만원','3천만원','5천만원'],a:1,ex:'CTR 기준금액은 2019년 7월부터 1천만원(1거래일, 동일인, 동일 금융회사 합산)이다.'},
+{id:'S2',subject:'CTR·STR',q:'CTR(고액현금거래보고) 기준금액이 현재의 1천만원으로 변경된 시행 시점은?',ch:['2013년 1월','2016년 1월','2019년 7월','2021년 1월','2023년 1월'],a:2,ex:'CTR 기준금액은 2019년 7월부터 1천만원으로 적용되고 있다.'},
+{id:'S3',subject:'CTR·STR',q:'의심거래보고(STR)의 보고대상 거래 기준금액은?',ch:['1천만원 이상','2천만원 이상','5천만원 이상','1억원 이상','금액 기준 없음'],a:4,ex:'STR은 CTR과 달리 금액 기준이 없으며, 의심되는 합당한 근거가 있으면 금액과 무관하게 보고 대상이다.'},
+{id:'S4',subject:'CTR·STR',q:'의심거래보고(STR)의 판단 기준으로 가장 적절한 것은?',ch:['거래금액이 1천만원을 초과하는지','금융회사 직원이 자금세탁 등에 이용되고 있다고 의심할 만한 합당한 근거가 있는지','고객이 외국인인지 여부','거래가 영업시간 외에 발생했는지','고객의 나이가 60세 이상인지'],a:1,ex:'STR은 금액과 무관하게, 자금세탁 등에 이용된다고 의심할 합당한 근거가 있을 때 보고한다.'},
+{id:'S5',subject:'CTR·STR',q:'금융회사가 의심거래를 인지했을 때 취해야 할 조치로 가장 적절한 것은?',ch:['월말에 일괄 보고','지체없이 금융정보분석원(FIU)에 보고','고객에게 먼저 확인 후 보고 여부 결정','내부 결재만 받고 보고는 생략 가능','수사기관에 직접 신고'],a:1,ex:'의심거래를 인지한 경우 지체없이 FIU에 보고해야 한다.'},
+{id:'S6',subject:'CTR·STR',q:'STR 보고 사실을 해당 고객 등에게 누설하는 행위(tipping-off)에 대한 설명으로 옳은 것은?',ch:['업무상 필요하면 자유롭게 알릴 수 있다','법령상 금지되며 위반 시 제재 대상이다','상급자 승인이 있으면 알릴 수 있다','보고 후 1년이 지나면 알려도 된다','고객이 요청하면 알려줘야 한다'],a:1,ex:'STR 보고사실 누설(tipping-off)은 법령상 금지되며 위반 시 제재를 받는다.'},
+{id:'S7',subject:'CTR·STR',q:'CTR(고액현금거래보고) 제도가 적용되는 거래로 가장 적절한 것은?',ch:['계좌 간 온라인 이체','신용카드 결제','실제 현금(수표 제외)의 입금 또는 출금','펀드 환매','외화송금'],a:2,ex:'CTR은 실물 현금의 입금·출금 거래를 대상으로 하며, 계좌이체 등 비현금거래는 대상이 아니다.'},
+{id:'S8',subject:'CTR·STR',q:'이상거래탐지시스템(FDS)의 주된 목적으로 옳은 것은?',ch:['고객 만족도 조사','정상적인 거래패턴에서 벗어난 거래를 탐지','대출 한도 산정','투자상품 추천','수수료 자동 정산'],a:1,ex:'FDS는 고객의 평소 거래패턴과 다른 이상징후를 자동으로 탐지해 STR 검토로 연결하는 시스템이다.'},
+{id:'S9',subject:'CTR·STR',q:'CTR과 STR의 가장 근본적인 차이는 무엇인가?',ch:['보고 대상 기관이 다르다','CTR은 금액기준이 있고 STR은 금액기준이 없다','CTR은 임의보고, STR은 의무보고다','CTR은 해외거래만, STR은 국내거래만 대상이다','CTR은 법인만, STR은 개인만 대상이다'],a:1,ex:'CTR은 1천만원이라는 명확한 금액기준이 있는 반면, STR은 금액과 무관하게 의심 여부로 판단한다.'},
+{id:'S10',subject:'CTR·STR',q:'금융회사가 의심거래보고(STR) 의무를 이행하지 않은 경우 받을 수 있는 조치는?',ch:['아무 조치도 없다','과태료 등 제재 대상이 될 수 있다','보고의무 자체가 면제된다','다음 분기로 보고를 이월할 수 있다','고객에게 책임이 전가된다'],a:1,ex:'STR 미보고는 특금법상 제재(과태료 등) 대상이 될 수 있다.'},
+{id:'S11',subject:'CTR·STR',q:'고액현금거래보고(CTR) 제도의 주된 목적으로 옳은 것은?',ch:['금융회사의 수익 증대','고객 신용도 평가','자금흐름 추적을 위한 객관적 근거자료 확보','대출 심사 간소화','외환 환율 안정'],a:2,ex:'CTR은 일정 금액 이상의 현금거래 정보를 축적해 자금흐름을 추적할 객관적 근거자료를 확보하는 제도다.'},
+{id:'S12',subject:'CTR·STR',q:'의심거래 여부를 판단할 때 종합적으로 고려해야 할 요소로 가장 거리가 먼 것은?',ch:['거래금액과 빈도','거래상대방의 특성','고객의 평소 거래패턴과의 괴리','고객의 정치적 성향(합법적 사상·신념)','자금의 출처와 목적'],a:3,ex:'의심거래 판단은 거래의 객관적 특성에 근거해야 하며, 합법적인 정치적 성향·사상 자체는 판단 요소가 아니다.'},
+{id:'S13',subject:'CTR·STR',q:'영업점 직원이 의심거래 정황을 인지했을 때 취해야 할 절차로 가장 적절한 것은?',ch:['본인이 직접 FIU에 익명으로 신고','내부 보고체계(컴플라이언스 부서 등)를 통해 즉시 보고','고객과 상담 후 처리 여부 결정','상황을 기록만 해두고 다음 방문 시 재확인','거래를 임의로 거절만 하고 종료'],a:1,ex:'영업점 직원은 내부통제기준에 따른 보고체계를 통해 컴플라이언스 부서 등에 즉시 보고해야 한다.'}
+];
+
+const WEIGHTS = {'글로벌기준':0.20,'국내제도':0.30,'위험과 방법':0.10,'위험평가':0.05,'CDD':0.15,'CTR·STR':0.20};
+const SUBJECTS = Object.keys(WEIGHTS);
+
+/* ---------- 상태 ---------- */
+const STORAGE_KEY = 'aml-study-data';
+let appState = { history: [], wrongNotes: {}, memos: [] };
+let session = null; // {questions, index, answers:{}, locked:{}}
+let quizSubject = 'ALL';
+let quizCount = 20;
+let notesFilter = 'ALL';
+let memoFilter = '글로벌기준';
+let memoDraft = '';
+
+/* ===== Google Drive 동기화 설정 ===== */
+const CLIENT_ID = '399507639972-p9fk1065mpd756bn9ji24kgdrisquaoc.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+const DRIVE_FILENAME = 'AML학습노트_기록.json';
+const TOKEN_KEY = 'aml-gd-token';
+
+let tokenClient = null;
+let accessToken = null;
+let driveFileId = null;
+let syncing = false;
+let saveTimer = null;
+
+function setSyncState(text, cls){
+  const el = document.getElementById('syncState');
+  if(el){ el.textContent = text; el.className = 'syncstate' + (cls?' '+cls:''); }
+}
+function setSyncBtn(text){
+  const b = document.getElementById('syncBtn');
+  if(b) b.textContent = text;
+}
+
+/* --- 로컬 저장 (항상 우선 기록: 오프라인·비로그인 대비) --- */
+function localSave(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(appState)); }catch(e){}
+}
+function localLoad(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return null;
+}
+
+/* --- Drive: 파일 검색 --- */
+async function driveFindFile(){
+  const q = encodeURIComponent(`name='${DRIVE_FILENAME}' and trashed=false`);
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&spaces=drive&fields=files(id,name,modifiedTime)`,{
+    headers:{ 'Authorization': 'Bearer '+accessToken }
+  });
+  if(!r.ok) throw new Error('drive search '+r.status);
+  const d = await r.json();
+  return (d.files && d.files.length) ? d.files[0] : null;
+}
+
+/* --- Drive: 내용 읽기 --- */
+async function driveRead(id){
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`,{
+    headers:{ 'Authorization': 'Bearer '+accessToken }
+  });
+  if(!r.ok) throw new Error('drive read '+r.status);
+  return await r.json();
+}
+
+/* --- Drive: 생성 --- */
+async function driveCreate(obj){
+  const boundary = 'aml'+Date.now();
+  const meta = { name: DRIVE_FILENAME, mimeType: 'application/json' };
+  const body =
+    `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n` +
+    JSON.stringify(meta) +
+    `\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n` +
+    JSON.stringify(obj) +
+    `\r\n--${boundary}--`;
+  const r = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{
+    method:'POST',
+    headers:{ 'Authorization':'Bearer '+accessToken, 'Content-Type':`multipart/related; boundary=${boundary}` },
+    body
+  });
+  if(!r.ok) throw new Error('drive create '+r.status);
+  const d = await r.json();
+  return d.id;
+}
+
+/* --- Drive: 갱신 --- */
+async function driveUpdate(id, obj){
+  const r = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`,{
+    method:'PATCH',
+    headers:{ 'Authorization':'Bearer '+accessToken, 'Content-Type':'application/json' },
+    body: JSON.stringify(obj)
+  });
+  if(!r.ok) throw new Error('drive update '+r.status);
+  return true;
+}
+
+/* --- 병합: 3기기 기록이 섞여도 유실 없게 --- */
+function mergeState(a, b){
+  if(!a) return b; if(!b) return a;
+  const out = { history: [], wrongNotes: {}, memos: [] };
+
+  // history: ts 기준 중복 제거 후 시간순
+  const hmap = {};
+  [...(a.history||[]), ...(b.history||[])].forEach(h=>{ if(h && h.ts) hmap[h.ts]=h; });
+  out.history = Object.values(hmap).sort((x,y)=>x.ts-y.ts).slice(-120);
+
+  // wrongNotes: 같은 문제면 최신 것 채택
+  const wa = a.wrongNotes||{}, wb = b.wrongNotes||{};
+  Object.keys({...wa, ...wb}).forEach(k=>{
+    const x = wa[k], y = wb[k];
+    if(x && y) out.wrongNotes[k] = (x.ts>=y.ts)? x : y;
+    else out.wrongNotes[k] = x || y;
+  });
+
+  // memos: id 기준 중복 제거
+  const mmap = {};
+  [...(a.memos||[]), ...(b.memos||[])].forEach(m=>{ if(m && m.id) mmap[m.id]=m; });
+  out.memos = Object.values(mmap).sort((x,y)=>y.ts-x.ts);
+
+  return out;
+}
+
+/* --- 로드 --- */
+async function loadState(){
+  const local = localLoad();
+  if(local) appState = local;
+  if(!appState.history) appState.history=[];
+  if(!appState.wrongNotes) appState.wrongNotes={};
+  if(!appState.memos) appState.memos=[];
+  renderQuiz(); renderNotes(); renderMemo(); renderStats();
+
+  // 저장된 토큰이 있으면 자동으로 드라이브 동기화 시도
+  const saved = (()=>{ try{ return JSON.parse(localStorage.getItem(TOKEN_KEY)||'null'); }catch(e){ return null; } })();
+  if(saved && saved.token && saved.exp > Date.now()){
+    accessToken = saved.token;
+    syncFromDrive();
+  }
+}
+
+/* --- 저장 (로컬 즉시 + 드라이브 지연) --- */
+function saveState(){
+  if(appState.history.length>120) appState.history = appState.history.slice(-120);
+  localSave();
+  if(accessToken){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(pushToDrive, 1200);
+  }
+}
+
+/* --- 드라이브에서 받아와 병합 --- */
+async function syncFromDrive(){
+  if(!accessToken || syncing) return;
+  syncing = true;
+  setSyncState('동기화 중...', '');
+  try{
+    let f = await driveFindFile();
+    if(f){
+      driveFileId = f.id;
+      const remote = await driveRead(f.id);
+      appState = mergeState(appState, remote);
+      localSave();
+      await driveUpdate(driveFileId, appState);
+    }else{
+      driveFileId = await driveCreate(appState);
+    }
+    renderQuiz(); renderNotes(); renderMemo(); renderStats();
+    setSyncState('드라이브 동기화됨', 'ok');
+    setSyncBtn('지금 동기화');
+  }catch(e){
+    console.error(e);
+    if((''+e.message).includes('401') || (''+e.message).includes('403')){
+      accessToken = null;
+      localStorage.removeItem(TOKEN_KEY);
+      setSyncState('재로그인 필요', 'err');
+      setSyncBtn('구글 드라이브 연결');
+    }else{
+      setSyncState('동기화 실패 (로컬 보관됨)', 'err');
+    }
+  }
+  syncing = false;
+}
+
+/* --- 드라이브로 밀어넣기 --- */
+async function pushToDrive(){
+  if(!accessToken) return;
+  try{
+    if(!driveFileId){
+      const f = await driveFindFile();
+      driveFileId = f ? f.id : await driveCreate(appState);
+      if(f){ const remote = await driveRead(f.id); appState = mergeState(appState, remote); localSave(); }
+    }
+    await driveUpdate(driveFileId, appState);
+    const t = new Date();
+    setSyncState(`저장됨 ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`, 'ok');
+  }catch(e){
+    console.error(e);
+    setSyncState('저장 실패 (로컬 보관됨)', 'err');
+  }
+}
+
+/* --- 로그인 --- */
+function handleAuthClick(){
+  if(accessToken){ syncFromDrive(); return; }
+  if(!tokenClient){
+    if(!window.google || !google.accounts || !google.accounts.oauth2){
+      setSyncState('구글 로그인 준비 중, 잠시 후 다시', 'err');
+      return;
+    }
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: (resp)=>{
+        if(resp.error){ setSyncState('로그인 취소됨', 'err'); return; }
+        accessToken = resp.access_token;
+        const exp = Date.now() + ((resp.expires_in||3500)*1000) - 60000;
+        try{ localStorage.setItem(TOKEN_KEY, JSON.stringify({token:accessToken, exp})); }catch(e){}
+        syncFromDrive();
+      }
+    });
+  }
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+
+/* 페이지 이탈 직전 마지막 저장 시도 */
+window.addEventListener('beforeunload', ()=>{ localSave(); });
+
+/* ---------- 유틸 ---------- */
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function pickWeighted(total){
+  let raw = SUBJECTS.map(k=>({k, exact: WEIGHTS[k]*total}));
+  let counts = raw.map(r=>({k:r.k, n: Math.floor(r.exact), rem: r.exact-Math.floor(r.exact)}));
+  let assigned = counts.reduce((s,c)=>s+c.n,0);
+  let remainder = total - assigned;
+  let order = counts.slice().sort((a,b)=>b.rem-a.rem);
+  for(let i=0;i<remainder;i++){ order[i % order.length].n++; }
+  let result=[];
+  order.forEach(c=>{
+    const pool = shuffle(BANK.filter(q=>q.subject===c.k));
+    result.push(...pool.slice(0, Math.min(c.n, pool.length)));
+  });
+  return shuffle(result);
+}
+function pickQuestions(subject, count){
+  if(subject==='ALL') return pickWeighted(count);
+  const pool = shuffle(BANK.filter(q=>q.subject===subject));
+  return pool.slice(0, Math.min(count, pool.length));
+}
+
+/* ---------- 탭 전환 ---------- */
+function renderTab(t){
+  if(t==='quiz') renderQuiz();
+  else if(t==='notes') renderNotes();
+  else if(t==='memo') renderMemo();
+  else if(t==='stats') renderStats();
+}
+document.querySelectorAll('.tabbtn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    ['quiz','notes','memo','stats'].forEach(t=>{
+      document.getElementById('tab-'+t).style.display = (t===btn.dataset.tab)?'block':'none';
+    });
+    renderTab(btn.dataset.tab);
+  });
+});
+
+/* ---------- 모의고사 탭 ---------- */
+function renderQuiz(){
+  const el = document.getElementById('tab-quiz');
+  if(session){ renderSessionView(el); return; }
+  let chips = '<div class="chiprow">';
+  chips += `<button class="chip ${quizSubject==='ALL'?'active':''}" onclick="setSubject('ALL')">전체비중</button>`;
+  SUBJECTS.forEach(s=>{ chips += `<button class="chip ${quizSubject===s?'active':''}" onclick="setSubject('${s}')">${s}</button>`; });
+  chips += '</div>';
+
+  const counts = [10,20,30,60];
+  let countRow = '<div class="countrow">';
+  counts.forEach(c=>{
+    const label = c===60?'전체(60)':c;
+    countRow += `<button class="countbtn ${quizCount===c?'active':''}" onclick="setCount(${c})">${label}</button>`;
+  });
+  countRow += '</div>';
+
+  el.innerHTML = `
+    <div class="card">
+      <p class="sectionlabel">과목 선택</p>
+      ${chips}
+      <p class="sectionlabel">문항 수</p>
+      ${countRow}
+      <button class="bigbtn" onclick="startQuiz()">모의고사 시작</button>
+    </div>
+  `;
+}
+function setSubject(s){ quizSubject=s; renderQuiz(); }
+function setCount(c){ quizCount=c; renderQuiz(); }
+
+function startQuiz(){
+  const qs = pickQuestions(quizSubject, quizCount);
+  if(qs.length===0){ return; }
+  session = { questions: qs, index:0, answers:{}, locked:{} };
+  renderQuiz();
+}
+
+function renderSessionView(el){
+  if(session.index >= session.questions.length){ renderResult(el); return; }
+  const q = session.questions[session.index];
+  const answered = session.answers[q.id] !== undefined;
+  const pct = Math.round((session.index/session.questions.length)*100);
+
+  let choicesHtml = '';
+  q.ch.forEach((c,i)=>{
+    let cls='choice';
+    if(answered){
+      if(i===q.a) cls+=' correct';
+      else if(i===session.answers[q.id]) cls+=' wrong';
+    } else if(session.answers[q.id]===i){ cls+=' selected'; }
+    choicesHtml += `<button class="${cls}" ${answered?'data-locked="1"':''} onclick="selectChoice('${q.id}',${i})"><span class="num">${i+1}</span><span>${c}</span></button>`;
+  });
+
+  el.innerHTML = `
+    <div class="progresswrap">
+      <span>${session.index+1} / ${session.questions.length}</span>
+      <div class="progressbar"><div style="width:${pct}%"></div></div>
+    </div>
+    <div class="card">
+      <span class="qtag">${q.subject} · ${q.id}</span>
+      <p class="qtext">${q.q}</p>
+      ${choicesHtml}
+      ${answered?`<div class="explain">${q.ex}</div>`:''}
+    </div>
+    <div class="navrow">
+      <button class="bigbtn secondary" onclick="exitQuiz()">중단</button>
+      <button class="bigbtn" ${answered?'':'disabled style="opacity:.4"'} onclick="nextQuestion()">${session.index+1===session.questions.length?'결과 보기':'다음 문제'}</button>
+    </div>
+  `;
+}
+function selectChoice(qid, idx){
+  if(session.answers[qid]!==undefined) return;
+  session.answers[qid]=idx;
+  const q = session.questions.find(x=>x.id===qid);
+  if(q){
+    if(idx!==q.a){
+      appState.wrongNotes[q.id] = { id:q.id, subject:q.subject, q:q.q, ch:q.ch, a:q.a, ex:q.ex, chosen: idx, ts: Date.now() };
+      saveState();
+    } else if(appState.wrongNotes[q.id]){
+      delete appState.wrongNotes[q.id];
+      saveState();
+    }
+    renderNotes(); renderMemo();
+  }
+  renderQuiz();
+}
+function nextQuestion(){
+  const q = session.questions[session.index];
+  if(session.answers[q.id]===undefined) return;
+  session.index++;
+  renderQuiz();
+}
+function exitQuiz(){ session=null; renderQuiz(); }
+
+function renderResult(el){
+  const qs = session.questions;
+  let correct=0; const breakdown={};
+  SUBJECTS.forEach(s=>breakdown[s]={correct:0,total:0});
+  qs.forEach(q=>{
+    if(!breakdown[q.subject]) breakdown[q.subject]={correct:0,total:0};
+    breakdown[q.subject].total++;
+    const ok = session.answers[q.id]===q.a;
+    if(ok){ breakdown[q.subject].correct++; correct++; }
+  });
+  const total = qs.length;
+  const pct = total? Math.round((correct/total)*100) : 0;
+  const score1000 = Math.round(pct*10);
+  let tier='재도전', pass=false;
+  if(score1000>=900){tier='1+등급';pass=true;}
+  else if(score1000>=800){tier='1등급';pass=true;}
+  else if(score1000>=700){tier='2등급';pass=true;}
+  else if(score1000>=600){tier='3등급';pass=true;}
+
+  // 저장: 오답노트 갱신 + 기록 추가
+  qs.forEach(q=>{
+    const ok = session.answers[q.id]===q.a;
+    if(!ok){
+      appState.wrongNotes[q.id] = {
+        id:q.id, subject:q.subject, q:q.q, ch:q.ch, a:q.a, ex:q.ex,
+        chosen: session.answers[q.id], ts: Date.now()
+      };
+    } else if(appState.wrongNotes[q.id]){
+      delete appState.wrongNotes[q.id]; // 다시 맞히면 오답노트에서 제외(마스터)
+    }
+  });
+  const hist = { ts: Date.now(), subjectMode: quizSubject, total, correct, breakdown };
+  appState.history.push(hist);
+  saveState();
+  renderNotes(); renderMemo(); renderStats();
+
+  let breakRows='';
+  Object.keys(breakdown).forEach(s=>{
+    const b=breakdown[s]; if(b.total===0) return;
+    const p = Math.round((b.correct/b.total)*100);
+    breakRows += `<div class="breakrow"><span>${s}</span><div class="breakbar"><div style="width:${p}%"></div></div><span>${b.correct}/${b.total}</span></div>`;
+  });
+
+  let wrongList='';
+  qs.filter(q=>session.answers[q.id]!==q.a).forEach(q=>{
+    wrongList += `
+      <div class="note-card">
+        <span class="qtag">${q.subject} · ${q.id}</span>
+        <p class="qtext" style="font-size:14.5px;">${q.q}</p>
+        <div class="note-line wrong">✕ 선택: ${q.ch[session.answers[q.id]]}</div>
+        <div class="note-line correct">✓ 정답: ${q.ch[q.a]}</div>
+        <div class="explain">${q.ex}</div>
+      </div>`;
+  });
+
+  el.innerHTML = `
+    <div class="resulthead"><span class="big">${quizSubject==='ALL'?'전체비중':quizSubject} · ${total}문항</span></div>
+    <div class="stampwrap">
+      <div class="stamp ${pass?'':'fail'}">
+        <span class="top">TPAC 모의</span>
+        <span class="score">${pct}%</span>
+        <span class="tier">${tier}</span>
+      </div>
+    </div>
+    <div class="card">
+      <p class="sectionlabel">과목별 결과</p>
+      ${breakRows}
+    </div>
+    ${wrongList? `<p class="sectionlabel" style="margin:4px 2px 8px;">오답 다시보기 (오답노트에 자동 저장됨)</p>${wrongList}` : `<div class="empty">전 문항 정답! 오답노트에 추가된 항목이 없어요.</div>`}
+    <button class="bigbtn" onclick="restartFromResult()">새 모의고사</button>
+  `;
+}
+function restartFromResult(){ session=null; renderQuiz(); }
+
+/* ---------- 오답노트 탭 ---------- */
+function renderNotes(){
+  const el = document.getElementById('tab-notes');
+  const all = Object.values(appState.wrongNotes).sort((a,b)=>b.ts-a.ts);
+  const filtered = notesFilter==='ALL'? all : all.filter(n=>n.subject===notesFilter);
+
+  let chips = '<div class="chiprow">';
+  chips += `<button class="chip ${notesFilter==='ALL'?'active':''}" onclick="setNotesFilter('ALL')">전체(${all.length})</button>`;
+  SUBJECTS.forEach(s=>{
+    const cnt = all.filter(n=>n.subject===s).length;
+    if(cnt===0) return;
+    chips += `<button class="chip ${notesFilter===s?'active':''}" onclick="setNotesFilter('${s}')">${s}(${cnt})</button>`;
+  });
+  chips += '</div>';
+
+  let list='';
+  if(filtered.length===0){
+    list = `<div class="empty">${all.length===0? '아직 오답이 없어요. 모의고사를 풀면 틀린 문제가 여기 자동으로 쌓여요.' : '해당 과목의 오답이 없어요.'}</div>`;
+  }else{
+    filtered.forEach(n=>{
+      const d = new Date(n.ts);
+      const dateStr = `${d.getMonth()+1}/${d.getDate()}`;
+      list += `
+        <div class="note-card">
+          <span class="qtag">${n.subject} · ${n.id}</span>
+          <p class="qtext" style="font-size:14.5px;">${n.q}</p>
+          <div class="note-line wrong">✕ 선택: ${n.ch[n.chosen]}</div>
+          <div class="note-line correct">✓ 정답: ${n.ch[n.a]}</div>
+          <div class="explain">${n.ex}</div>
+          <div class="note-meta">최근 오답일 ${dateStr}</div>
+        </div>`;
+    });
+  }
+
+  el.innerHTML = `
+    <div class="card">${chips}
+      ${all.length>0? `<button class="bigbtn" onclick="retryWrong()">${notesFilter==='ALL'?'전체':notesFilter} 오답 다시 풀기</button>`:''}
+    </div>
+    ${list}
+  `;
+}
+function setNotesFilter(s){ notesFilter=s; renderNotes(); }
+function retryWrong(){
+  const all = Object.values(appState.wrongNotes);
+  const target = notesFilter==='ALL'? all : all.filter(n=>n.subject===notesFilter);
+  if(target.length===0) return;
+  const qs = shuffle(target.map(n=>({id:n.id,subject:n.subject,q:n.q,ch:n.ch,a:n.a,ex:n.ex})));
+  session = { questions: qs, index:0, answers:{}, locked:{} };
+  document.querySelector('.tabbtn[data-tab="quiz"]').click();
+  renderQuiz();
+}
+
+/* ---------- 핵심정리 탭 ---------- */
+function renderMemo(){
+  const el = document.getElementById('tab-memo');
+  let chips = '<div class="chiprow">';
+  SUBJECTS.forEach(s=>{
+    const cnt = appState.memos.filter(m=>m.subject===s).length;
+    chips += `<button class="chip ${memoFilter===s?'active':''}" onclick="setMemoFilter('${s}')">${s}${cnt?` (${cnt})`:''}</button>`;
+  });
+  chips += '</div>';
+
+  const wrongCount = Object.values(appState.wrongNotes).filter(n=>n.subject===memoFilter).length;
+
+  const list = appState.memos.filter(m=>m.subject===memoFilter).sort((a,b)=>b.ts-a.ts);
+  let listHtml = '';
+  if(list.length===0){
+    listHtml = `<div class="empty">${memoFilter} 영역에 정리한 메모가 아직 없어요.</div>`;
+  }else{
+    list.forEach(m=>{
+      const d = new Date(m.ts);
+      const dateStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      listHtml += `
+        <div class="memo-card">
+          ${m.auto?'<span class="qtag">자동정리</span>':''}
+          <div class="memotext">${escapeHtml(m.text)}</div>
+          <div class="memofoot">
+            <span class="note-meta">${dateStr}</span>
+            <button class="delbtn" onclick="deleteMemo('${m.id}')">삭제</button>
+          </div>
+        </div>`;
+    });
+  }
+
+  el.innerHTML = `
+    <div class="card">
+      <p class="sectionlabel">영역 선택</p>
+      ${chips}
+    </div>
+    <div class="card">
+      <p class="sectionlabel">오답노트 기반 자동정리</p>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.5;">${memoFilter} 영역의 오답 ${wrongCount}건을 모아 핵심포인트로 정리해요.</p>
+      <button class="bigbtn" ${wrongCount===0?'disabled style="opacity:.4"':''} onclick="autoMemoFromWrong()">${memoFilter} 오답 ${wrongCount}건 자동정리 생성</button>
+    </div>
+    <div class="card">
+      <p class="sectionlabel">직접 메모 — ${memoFilter}</p>
+      <textarea class="memoinput" id="memoInput" placeholder="자동정리 외에 따로 남기고 싶은 메모가 있다면 적어두세요.">${escapeHtml(memoDraft)}</textarea>
+      <button class="bigbtn secondary" onclick="addMemo()">이 영역에 저장</button>
+    </div>
+    ${listHtml}
+  `;
+  const ta = document.getElementById('memoInput');
+  if(ta) ta.addEventListener('input', e=>{ memoDraft = e.target.value; });
+}
+function setMemoFilter(s){ memoFilter=s; memoDraft=''; renderMemo(); }
+function addMemo(){
+  const ta = document.getElementById('memoInput');
+  const text = ta ? ta.value.trim() : '';
+  if(!text) return;
+  appState.memos.push({ id: 'm'+Date.now(), subject: memoFilter, text, ts: Date.now(), auto:false });
+  memoDraft='';
+  saveState();
+  renderMemo();
+}
+function generateAutoMemo(subject){
+  const items = Object.values(appState.wrongNotes).filter(n=>n.subject===subject);
+  if(items.length===0) return null;
+  const lines = [...new Set(items.map(n=>`· ${n.ex}`))];
+  const d = new Date();
+  const dateStr = `${d.getMonth()+1}/${d.getDate()}`;
+  return `[${dateStr} 기준 오답 ${items.length}건 요약]\n` + lines.join('\n');
+}
+function autoMemoFromWrong(){
+  const text = generateAutoMemo(memoFilter);
+  if(!text) return;
+  appState.memos.push({ id: 'm'+Date.now(), subject: memoFilter, text, ts: Date.now(), auto:true });
+  saveState();
+  renderMemo();
+}
+function deleteMemo(id){
+  appState.memos = appState.memos.filter(m=>m.id!==id);
+  saveState();
+  renderMemo();
+}
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ---------- 통계 탭 ---------- */
+function renderStats(){
+  const el = document.getElementById('tab-stats');
+  const hist = appState.history;
+  if(hist.length===0){
+    el.innerHTML = `<div class="empty">아직 모의고사 기록이 없어요. 첫 모의고사를 풀어보세요.</div>`;
+    return;
+  }
+  let sumCorrect=0, sumTotal=0;
+  const agg={};
+  SUBJECTS.forEach(s=>agg[s]={correct:0,total:0});
+  hist.forEach(h=>{
+    sumCorrect+=h.correct; sumTotal+=h.total;
+    Object.keys(h.breakdown||{}).forEach(s=>{
+      if(!agg[s]) agg[s]={correct:0,total:0};
+      agg[s].correct += h.breakdown[s].correct;
+      agg[s].total += h.breakdown[s].total;
+    });
+  });
+  const overallPct = sumTotal? Math.round((sumCorrect/sumTotal)*100):0;
+
+  let subjectRows='';
+  SUBJECTS.forEach(s=>{
+    const b=agg[s]; if(b.total===0) return;
+    const p=Math.round((b.correct/b.total)*100);
+    subjectRows += `<div class="breakrow"><span>${s}</span><div class="breakbar"><div style="width:${p}%"></div></div><span>${p}%</span></div>`;
+  });
+
+  let recentRows='';
+  hist.slice(-10).reverse().forEach(h=>{
+    const d=new Date(h.ts);
+    const dateStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const p = h.total? Math.round((h.correct/h.total)*100):0;
+    recentRows += `<div class="breakrow"><span style="font-family:'SFMono-Regular',Consolas,monospace;font-size:11.5px;">${dateStr}</span><span>${h.subjectMode==='ALL'?'전체비중':h.subjectMode}</span><span>${h.correct}/${h.total} (${p}%)</span></div>`;
+  });
+
+  el.innerHTML = `
+    <div class="card statbig">
+      <div class="num">${overallPct}%</div>
+      <div class="lbl">전체 누적 정답률 · ${sumTotal}문항</div>
+    </div>
+    <div class="card">
+      <p class="sectionlabel">과목별 정답률</p>
+      ${subjectRows}
+    </div>
+    <div class="card">
+      <p class="sectionlabel">최근 기록</p>
+      ${recentRows}
+    </div>
+    <button class="footlink" onclick="resetAll()">전체 기록·오답노트·핵심정리 초기화</button>
+  `;
+}
+function resetAll(){
+  if(!confirm('모든 모의고사 기록, 오답노트, 핵심정리를 삭제할까요? 되돌릴 수 없어요.')) return;
+  appState = { history: [], wrongNotes: {}, memos: [] };
+  localSave();
+  if(accessToken && driveFileId){ driveUpdate(driveFileId, appState).catch(e=>console.error(e)); }
+  renderQuiz(); renderNotes(); renderMemo(); renderStats();
+}
+
+/* ---------- 초기화 ---------- */
+(function setDate(){
+  const now = new Date();
+  const s = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+  document.getElementById('dateBadge').textContent = s;
+})();
+loadState();
+</script>
+</body>
+</html>
