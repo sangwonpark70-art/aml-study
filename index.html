@@ -1417,6 +1417,7 @@ function generateAutoMemo(subject){
 function autoMemoFromWrong(){
   const text = generateAutoMemo(memoFilter);
   if(!text) return;
+  appState.memos = appState.memos.filter(m => !(m.subject === memoFilter && m.auto === true));
   appState.memos.push({ id: 'm'+Date.now(), subject: memoFilter, text, ts: Date.now(), auto:true });
   saveState();
   renderMemo();
