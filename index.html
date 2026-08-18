@@ -1573,6 +1573,25 @@ function resetAll(){
   document.getElementById('dateBadge').textContent = s;
 })();
 loadState();
+
+/* ── 정리노트 연동: ?qids=NK04,NK07 로 지정 문항 복습 세션 ──
+   askedIds에 기록하지 않는다(복습은 미출제 로테이션을 소모하지 않음) */
+(function qidsDeepLink(){
+  try{
+    const p = new URLSearchParams(location.search).get('qids');
+    if(!p) return;
+    const ids = p.split(',').map(x=>x.trim()).filter(Boolean);
+    const qs0 = ids.map(id=>BANK.find(b=>b.id===id)).filter(Boolean);
+    if(qs0.length===0) return;
+    const qs = shuffle(qs0).map(q=>{
+      const perm = shuffle([0,1,2,3,4]);
+      return { ...q, ch: perm.map(i=>q.ch[i]), a: perm.indexOf(q.a) };
+    });
+    session = { questions: qs, index:0, answers:{}, locked:{} };
+    document.querySelector('.tabbtn[data-tab="quiz"]').click();
+    renderQuiz();
+  }catch(e){ console.error('qids deeplink', e); }
+})();
 </script>
 </body>
 </html>

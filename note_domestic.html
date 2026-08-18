@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TPAC 정리노트 — 국내제도</title>
+<style>
+:root{--ink:#1a2332;--muted:#6b7280;--line:#e5e7eb;--bg:#f6f6f1;--card:#fff;
+--red:#dc2626;--amber:#d97706;--green:#059669;--gray:#9ca3af;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--ink);
+font-size:15px;line-height:1.65;padding-bottom:60px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 14px;}
+header{background:var(--card);border-bottom:2px solid var(--ink);padding:18px 0 14px;margin-bottom:14px;}
+header h1{font-size:20px;}
+header .sub{font-size:12.5px;color:var(--muted);margin-top:4px;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11.5px;margin-top:8px;color:var(--muted);}
+.legend b{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px;}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px;}
+.sec h2{font-size:16px;border-left:4px solid var(--ink);padding-left:9px;margin-bottom:4px;}
+.sec .meta{font-size:11.5px;color:var(--muted);margin-bottom:10px;}
+.topic{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);}
+.topic:first-of-type{border-top:none;padding-top:0;}
+.topic h3{font-size:14.5px;margin-bottom:6px;}
+.imp{color:var(--amber);font-size:12px;letter-spacing:1px;}
+.body{font-size:14px;}
+.body p{margin:5px 0;}
+.body .trap{background:#fef2f2;border-left:3px solid var(--red);padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body .amend{background:#fffbeb;border-left:3px solid var(--amber);padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body table{border-collapse:collapse;width:100%;margin:7px 0;font-size:13px;}
+.body td,.body th{border:1px solid var(--line);padding:5px 7px;text-align:left;}
+.body th{background:#f9fafb;font-weight:600;}
+.qrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:9px;}
+.qchip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;
+border:1px solid var(--line);border-radius:20px;padding:3px 9px;background:#fafafa;color:var(--ink);}
+.qchip .dot{width:8px;height:8px;border-radius:50%;background:var(--gray);}
+.qchip.s0 .dot{background:var(--red);}.qchip.s1 .dot{background:var(--amber);}.qchip.s2 .dot{background:var(--green);}
+.qchip .wc{color:var(--red);font-weight:700;}
+.solve{margin-left:auto;font-size:12px;font-weight:700;color:#fff;background:var(--ink);
+border-radius:20px;padding:5px 13px;text-decoration:none;white-space:nowrap;}
+.summarybar{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;
+margin-bottom:12px;font-size:13px;display:none;}
+.summarybar.on{display:block;}
+.foot{font-size:11.5px;color:var(--muted);text-align:center;margin-top:20px;}
+a.back{color:var(--muted);font-size:12.5px;text-decoration:none;}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="back" href="./index.html">← TPAC 학습노트로</a>
+<h1>정리노트 — 국내제도</h1>
+<div class="sub">배점 비중 30% · 10p당 24점 (전 영역 중 최고 효율) · 관련 문항 53</div>
+<div class="legend">
+<span><b style="background:var(--red)"></b>틀리는 중</span>
+<span><b style="background:var(--amber)"></b>학습 중</span>
+<span><b style="background:var(--green)"></b>안정</span>
+<span><b style="background:var(--gray)"></b>미출제</span>
+<span style="margin-left:auto">숫자 = 누적 오답 횟수</span>
+</div>
+</div></header>
+<div class="wrap">
+
+<div class="summarybar" id="sumbar"></div>
+
+<div class="sec"><h2>1. 자금세탁방지 법체계 — 3법 구조</h2>
+<div class="meta">시험의 뼈대. 법률 간 역할 구분이 매년 나온다.</div>
+
+<div class="topic" data-qids="D20,D5,NK12,D10,D33,D3">
+<h3>① 3법의 역할 분담 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>법률</th><th>역할</th><th>키워드</th></tr>
+<tr><td>특정금융정보법</td><td>보고·분석·정보제공 (행정)</td><td>STR·CTR·CDD·FIU</td></tr>
+<tr><td>범죄수익은닉규제법</td><td>자금세탁 처벌·몰수 (형사)</td><td>제3조 은닉·가장, 종사자 신고의무(제5조①)</td></tr>
+<tr><td>마약류불법거래방지법</td><td>마약 관련 불법수익 (형사)</td><td>제7조 불법수익 은닉</td></tr></table>
+<p>자금세탁 <b>개념</b>을 규정하는 법: 범죄수익은닉규제법 + 마약류불법거래방지법 + 특정금융정보법(제2조 제5호 — 조세포탈 목적 포함).</p>
+<div class="trap">함정: 종사자의 수사기관 신고 의무 = <b>범죄수익은닉규제법 제5조①</b>이다. 특금법·형사소송법 아님. 이 신고는 특금법상 STR 사유(제4조①3호)와 연결된다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="D21,D6,D4,D15">
+<h3>② 규제체계 3축·차명거래·벌칙 <span class="imp">★★</span></h3>
+<div class="body">
+<p>규제체계 3축: <b>특금법(보고) — 범죄수익은닉규제법(처벌) — 테러자금금지법(공중협박자금)</b>.</p>
+<p>차명거래 제재 근거 = <b>금융실명법</b>(불법재산 은닉 등 목적의 차명거래 금지). 전제범죄는 범죄수익은닉규제법 별표의 중대범죄 체계로 규정.</p>
+<div class="trap">특금법 과태료 상한: 제20조 — <b>1억원 이하</b>(미보고 등) / 3천만원 이하 구간 구분. 벌칙(형벌)과 과태료(행정) 구분 주의 — STR 누설은 형벌(징역·벌금) 대상.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>2. 금융정보분석원 (KoFIU)</h2>
+<div class="meta">기관 성격 + 도입 연혁. 숫자(연도) 암기 구간.</div>
+
+<div class="topic" data-qids="D1,D2,D31,NK11,D30">
+<h3>③ FIU 성격과 연혁 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>2001년</b> 설립, 특금법 제3조 근거. <b>행정형 FIU</b> — 수사·기소 권한 없음. 보고 수집·분석 후 법집행기관(검찰·경찰·국세청·관세청 등)에 <b>제공</b>하는 구조.</p>
+<p>제도 도입 순서: <b>STR(2001) → CTR(2006) → CDD(2006)·강화(2008)</b>. 에그몽 그룹 가입 <b>2002년</b>.</p>
+<div class="trap">함정: "FIU는 수사기관이다" / "STR 보고는 고발이다" — 전부 틀린 서술. 보고≠고발이 반복 출제.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>3. 내부통제 — 구성원별 역할 · 3선방어 · 감사</h2>
+<div class="meta">국내제도 최다 출제 구간. 2026.1.22 개정 반영 필수.</div>
+
+<div class="topic" data-qids="NK04,NK07,NK03">
+<h3>④ 구성원별 역할과 책임 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>주체</th><th>역할</th></tr>
+<tr><td>이사회</td><td>업무지침 <b>제정·개정·폐지</b> / 경영진 감독 / 감사결과 보고받음</td></tr>
+<tr><td>대표이사</td><td>내부통제 <b>총괄</b> 구축·운영 / <b>보고책임자 임명</b> / 지침안 이사회 상정</td></tr>
+<tr><td>보고책임자</td><td>STR·CTR 보고 / 고객확인 총괄 / <b>직원알기제도</b> 수립·운영 / 교육 <b>연 1회↑</b></td></tr>
+<tr><td>준법감시인등</td><td>임직원의 업무지침 준수 여부 감독 (제5조의2 신설)</td></tr></table>
+<div class="amend">개정(FIU고시 제2025-2호, 시행 2026.1.22): 종전 "경영진" 조문이 <b>"대표이사"(제5조)</b>로 개편, <b>준법감시인등(제5조의2)</b> 신설. 구판 기준 암기 = 오답.</div>
+<div class="trap">함정: "보고책임자 임명 = 이사회" → X (대표이사). "지침 제·개정 = 대표이사" → X (이사회).</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NK05,NK06">
+<h3>⑤ 3선 방어체계 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>1선</b> 영업·현업(고객확인 이행, 의심거래 최초 인지) → <b>2선</b> 준법감시·리스크관리(정책 수립·모니터링) → <b>3선</b> 내부감사(1·2선의 적정성 독립 검증).</p>
+<div class="trap">함정: "감사팀장이 보고책임자 겸임이 바람직" → X. 자기가 한 일을 자기가 감사하게 되어 독립성 붕괴(FIU 유권해석 사례 92).</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NK01,NK02,D25,D26,NK08">
+<h3>⑥ 직원알기·독립적 감사·교육 — 조문·주기 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>제도</th><th>조문</th><th>핵심</th></tr>
+<tr><td>직원알기제도</td><td>제10조(정의)</td><td>채용 시+지속. 보고책임자 소관</td></tr>
+<tr><td>독립적 감사체계</td><td>제12조(정의)·제14조(주기)</td><td><b>연 1회 이상</b>, 감사/감사위원회 실시</td></tr>
+<tr><td>교육·연수</td><td>—</td><td><b>연 1회 이상</b>, 보고책임자 실시</td></tr></table>
+<p>감사 실시자: 감사·감사위원회 원칙, 예외적으로 타 내부부서·외부전문가 가능. 단 <b>AML 담당부서는 불가</b>(피감 대상). 결과 보고 → <b>이사회</b>.</p>
+<div class="trap">함정: "감사 연 1회 = 보고책임자 실시" → 주체 뒤바꿔 출제. 감사=감사(위), 교육=보고책임자. 같은 '연 1회'라 혼동 유도.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>4. 의심거래보고 (STR)</h2>
+<div class="meta">면책·누설금지·증거능력·정보공유 — 4종 세트로 묶어 암기.</div>
+
+<div class="topic" data-qids="D11,D32,D34,NK17,NK10">
+<h3>⑦ 보고의 성격·면책·증거능력 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>보고 = 정보 제공(≠고발). 기준금액 <b>없음</b>(2013 폐지) — 의심되는 합당한 근거가 있으면 지체 없이.</p>
+<p><b>선의 보고 면책</b>: 결과적으로 범죄와 무관해도 비밀유지 의무 위반 아님. 사후 사실이 아니어도 면책 유지(소급 취소 없음).</p>
+<p><b>증거능력</b>: STR 정보는 <b>재판에서 증거로 사용 불가</b>(특금법 제12조③) — 수사 단서로만.</p>
+<p>내부보고체제: 작성자와 검토자·보고책임자 분리 원칙(소규모 금융회사는 예외 허용).</p>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="D35,D36">
+<h3>⑧ 정보누설 금지와 예외 2가지 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>보고 사실을 거래 상대방 포함 <b>타인에게 누설 금지</b>(tipping-off). 예외는 딱 둘:</p>
+<p><b>① 동일 금융회사 내부</b> 정보공유 · <b>② 해당국 법령에 근거 있는 외국 FIU</b>와의 교환.</p>
+<div class="trap">함정: "언론에 공익 목적 제공 가능" / "계열사 간 공유 가능" → 전부 X. 예외 2가지 외 전부 누설.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>5. CTR · 기록보존 — 숫자 세트</h2>
+<div class="meta">숫자만 정확하면 다 맞는 구간. 혼동 쌍으로 외울 것.</div>
+
+<div class="topic" data-qids="D38,D37,NK09">
+<h3>⑨ 핵심 숫자 일람 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>항목</th><th>숫자</th><th>혼동 포인트</th></tr>
+<tr><td>CTR 기준금액</td><td><b>1천만원</b> (2019.7~)</td><td>법률은 대통령령 위임 방식</td></tr>
+<tr><td>CTR 합산</td><td><b>1거래일</b>·동일인·동일 금융회사</td><td rowspan="2">↔ 연결거래 <b>7일</b>과 반드시 구분</td></tr>
+<tr><td>연결거래(CDD) 합산</td><td><b>7일</b></td></tr>
+<tr><td>기록 보존</td><td><b>거래관계 종료 시</b>부터 <b>5년↑</b></td><td>기산점이 거래일 아님</td></tr></table>
+<p>CTR 중계기관: 은행연합회·금융결제원 등 지정 — 보고는 FIU로, 중계기관은 전달 통로.</p>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>6. 고객확인 · 실제소유자 (국내제도 파트)</h2>
+<div class="meta">실무편 CDD와 겹치지만, 여기선 특금법 조문 각도로 나온다.</div>
+
+<div class="topic" data-qids="D7,D12,D13,D14,D16,D17,D23">
+<h3>⑩ 실제소유자 3단계·확인 거부 시 조치 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>법인 실제소유자: <b>① 25%↑ 지분 개인 → ② 최다 지분자 등 → ③ 대표자</b> 순 단계적 확인. 복수 가능.</p>
+<p>고객이 확인에 불응: <b>신규 거래 거절·기존 거래 종료 가능</b> + 이 경우 <b>STR 검토 의무</b>.</p>
+<p>확인 면제 가능 대상: 국가·지자체·공공단체 등(사업자번호 중간 <b>83</b>=국가기관 계열 → 면제 가능성, <b>81</b>=영리법인 → 면제 아님).</p>
+<p>제3자를 통한 고객확인(위탁): 최종 책임은 <b>위탁한 금융회사</b>에 남는다.</p>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>7. 적용대상 — "금융회사등"의 범위</h2>
+<div class="meta">포함/불포함 판별형. 경계 사례를 외운다.</div>
+
+<div class="topic" data-qids="D27,D28,D24,D8,D9">
+<h3>⑪ 포함·불포함 경계 <span class="imp">★★</span></h3>
+<div class="body">
+<p>포함: 은행·보험·금융투자·상호금융·카지노·<b>가상자산사업자</b>·전자금융업자·<b>대부업자(자산 500억↑ 등 요건 충족 시)</b>·부동산 신탁사(신탁업 겸영 범위) 등.</p>
+<div class="trap">함정: 대부업자는 "전부 포함"이 아니라 <b>요건 충족분만</b>. 특금법이 직접 규정하지 않는 사항(예: 자금세탁 형사처벌)을 "특금법 규정"으로 낸 오답 선지 주의.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>8. 가상자산사업자 (VASP)</h2>
+<div class="meta">최신 개정(2026.8.20 시행) 포함 — 이번 회차 출제 유력 구간.</div>
+
+<div class="topic" data-qids="NK15,D22">
+<h3>⑫ 신고 숫자 세트 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>항목</th><th>숫자</th></tr>
+<tr><td>신고 유효기간</td><td>법 상한 <b>5년</b> / 시행령 <b>3년</b></td></tr>
+<tr><td>갱신신고</td><td>만료 <b>45일 전</b>까지</td></tr>
+<tr><td>말소 후 재신고 제한</td><td><b>5년</b></td></tr>
+<tr><td>결격(벌금형↑) 경과기간</td><td>집행 종료·면제일부터 <b>5년</b></td></tr></table>
+<div class="trap">함정: "유효기간 5년"만 외우면 틀린다 — 법 상한 5년, <b>실제는 시행령 3년</b>. 말소 후 "3년"도 오답 단골.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NK13,NK14,NK18,NK16">
+<h3>⑬ 2026.8.20 시행 개정 + 사업자 의무 <span class="imp">★★★</span></h3>
+<div class="body">
+<div class="amend">개정 4대 포인트: ① 신고사항에 <b>대주주</b> 관련 사항 추가 ② 불수리 사유 인적 범위에 <b>대주주 포함</b>(최대주주의 특수관계인·법인 배후의 사실상 영향력 행사자까지) ③ 관련 법률 범위 확대(조세범처벌법·공정거래법·가상자산이용자보호법 등) ④ <b>퇴임 임원 조치내용 통보</b> 신설. CTR 기준금액 인하는 개정 내용 <b>아님</b>.</div>
+<p>사업자 의무: 고객별 거래내역 분리 / 예치금 구분 관리 / 미신고 사업자와 영업 목적 거래 금지 / <b>자사·임직원 거래는 제한 기준 마련 대상</b>(허용이 아님).</p>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="foot">TPAC 정리노트 국내제도편 v1.0 (2026-08-19) · 근거: 특금법(제19563호+2026.8.20 시행분)·업무규정(FIU고시 제2025-2호)·FIU 유권해석사례집 2.0<br>
+배지는 이 브라우저의 학습 기록 기준. 다른 기기 기록은 앱에서 "지금 동기화" 후 반영.</div>
+</div>
+
+<script>
+/* 앱 localStorage(aml-study-data) 읽어 문항 상태 배지 렌더 */
+(function(){
+  let st={};
+  try{ st = JSON.parse(localStorage.getItem('aml-study-data')||'{}'); }catch(e){}
+  const wn = st.wrongNotes||{};
+  const stateOf = id => {
+    const n = wn[id];
+    if(!n) return {cls:'',label:'미출제',wc:0};
+    if(!n.mastered) return {cls:'s0',label:'틀리는 중',wc:n.wrongCount||1};
+    return ((n.correctStreak||1)>=3) ? {cls:'s2',label:'안정',wc:n.wrongCount||0}
+                                     : {cls:'s1',label:'학습 중',wc:n.wrongCount||0};
+  };
+  let tot={red:0,amb:0,grn:0,none:0};
+  document.querySelectorAll('.topic').forEach(tp=>{
+    const ids=(tp.dataset.qids||'').split(',').map(x=>x.trim()).filter(Boolean);
+    const row=tp.querySelector('.qrow');
+    ids.forEach(id=>{
+      const s=stateOf(id);
+      if(s.cls==='s0')tot.red++;else if(s.cls==='s1')tot.amb++;else if(s.cls==='s2')tot.grn++;else tot.none++;
+      const chip=document.createElement('span');
+      chip.className='qchip '+s.cls;
+      chip.innerHTML='<span class="dot"></span>'+id+(s.wc>1?' <span class="wc">×'+s.wc+'</span>':'');
+      chip.title=s.label;
+      row.appendChild(chip);
+    });
+    const a=document.createElement('a');
+    a.className='solve'; a.href='./index.html?qids='+ids.join(',');
+    a.textContent='이 주제 풀기 ('+ids.length+')';
+    row.appendChild(a);
+  });
+  const bar=document.getElementById('sumbar');
+  if(tot.red+tot.amb+tot.grn>0){
+    bar.classList.add('on');
+    bar.innerHTML='<b>내 상태</b> — <span style="color:var(--red)">틀리는 중 '+tot.red
+      +'</span> · <span style="color:var(--amber)">학습 중 '+tot.amb
+      +'</span> · <span style="color:var(--green)">안정 '+tot.grn
+      +'</span> · 미출제 '+tot.none
+      +' <span style="color:var(--muted)">(빨간 주제부터 "이 주제 풀기")</span>';
+  }
+})();
+</script>
+</body>
+</html>
