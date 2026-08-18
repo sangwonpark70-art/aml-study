@@ -946,6 +946,14 @@ async function driveUpdate(id, obj){
 }
 
 /* --- 병합: 3기기 기록이 섞여도 유실 없게 --- */
+function ensureState(){
+  if(!appState || typeof appState!=='object') appState = {};
+  if(!Array.isArray(appState.askedIds)) appState.askedIds = [];
+  if(!Array.isArray(appState.history))  appState.history  = [];
+  if(!Array.isArray(appState.memos))    appState.memos    = [];
+  if(!appState.wrongNotes || typeof appState.wrongNotes!=='object') appState.wrongNotes = {};
+  return appState;
+}
 function mergeState(a, b){
   if(!a) return b; if(!b) return a;
   const out = { askedIds: [...new Set([...(a.askedIds||[]), ...(b.askedIds||[])])], history: [], wrongNotes: {}, memos: [] };
@@ -975,9 +983,7 @@ function mergeState(a, b){
 async function loadState(){
   const local = localLoad();
   if(local) appState = local;
-  if(!appState.history) appState.history=[];
-  if(!appState.wrongNotes) appState.wrongNotes={};
-  if(!appState.memos) appState.memos=[];
+  ensureState();
   renderQuiz(); renderNotes(); renderMemo(); renderStats();
 
   // 저장된 토큰이 있으면 자동으로 드라이브 동기화 시도
@@ -990,6 +996,7 @@ async function loadState(){
 
 /* --- 저장 (로컬 즉시 + 드라이브 지연) --- */
 function saveState(){
+  ensureState();
   if(appState.history.length>120) appState.history = appState.history.slice(-120);
   localSave();
   if(accessToken){
@@ -1001,7 +1008,7 @@ function saveState(){
 /* --- 드라이브에서 받아와 병합 --- */
 async function syncFromDrive(){
   if(!accessToken || syncing) return;
-  syncing = true;
+  syncing = true; ensureState();
   setSyncState('동기화 중...', '');
   try{
     let f = await driveFindFile();
@@ -1033,20 +1040,32 @@ async function syncFromDrive(){
 
 /* --- 드라이브로 밀어넣기 --- */
 async function pushToDrive(){
-  if(!accessToken) return;
+  if(!accessToken || syncing) return;
+  syncing = true; ensureState();
   try{
     if(!driveFileId){
       const f = await driveFindFile();
-      driveFileId = f ? f.id : await driveCreate(appState);
-      if(f){ const remote = await driveRead(f.id); appState = mergeState(appState, remote); localSave(); }
+      if(f){
+        driveFileId = f.id;
+        const remote = await driveRead(f.id);
+        appState = mergeState(appState, remote); localSave();
+      }else{
+        driveFileId = await driveCreate(appState);
+      }
+    }else{
+      /* 다른 기기가 그사이 올린 기록을 덮어쓰지 않도록 반드시 병합 후 저장 */
+      const remote = await driveRead(driveFileId);
+      appState = mergeState(appState, remote); localSave();
     }
     await driveUpdate(driveFileId, appState);
+    renderNotes(); renderMemo(); renderStats();
     const t = new Date();
     setSyncState(`저장됨 ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`, 'ok');
   }catch(e){
     console.error(e);
     setSyncState('저장 실패 (로컬 보관됨)', 'err');
   }
+  syncing = false;
 }
 
 /* --- 로그인 --- */
@@ -1074,6 +1093,13 @@ function handleAuthClick(){
 
 /* 페이지 이탈 직전 마지막 저장 시도 */
 window.addEventListener('beforeunload', ()=>{ localSave(); });
+/* 백그라운드 전환 시 1.2초 대기분을 기다리지 않고 즉시 반영 (모바일 앱 전환 대비) */
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'hidden'){
+    localSave();
+    if(accessToken && driveFileId){ clearTimeout(saveTimer); pushToDrive(); }
+  }
+});
 
 /* ---------- 유틸 ---------- */
 function shuffle(arr){
@@ -1496,7 +1522,7 @@ function renderStats(){
 }
 function resetAll(){
   if(!confirm('모든 모의고사 기록, 오답노트, 핵심정리를 삭제할까요? 되돌릴 수 없어요.')) return;
-  appState = { history: [], wrongNotes: {}, memos: [] };
+  appState = { askedIds: [], history: [], wrongNotes: {}, memos: [] };
   localSave();
   if(accessToken && driveFileId){ driveUpdate(driveFileId, appState).catch(e=>console.error(e)); }
   renderQuiz(); renderNotes(); renderMemo(); renderStats();
