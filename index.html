@@ -138,7 +138,7 @@
     font-size:11px;color:var(--muted);border:1px solid var(--line);
     border-radius:3px;padding:2px 7px;margin-bottom:10px;
   }
-  .qtext{font-size:16px;line-height:1.55;font-weight:600;margin:0 0 16px;}
+  .qtext{font-size:16px;line-height:1.55;font-weight:600;margin:0 0 16px;white-space:pre-wrap;}
 
   .choice{
     display:flex;align-items:flex-start;gap:10px;
@@ -853,7 +853,7 @@ const SUBJECTS = Object.keys(WEIGHTS);
 
 /* ---------- 상태 ---------- */
 const STORAGE_KEY = 'aml-study-data';
-let appState = { history: [], wrongNotes: {}, memos: [] };
+let appState = { askedIds: [], history: [], wrongNotes: {}, memos: [] };
 let session = null; // {questions, index, answers:{}, locked:{}}
 let quizSubject = 'ALL';
 let quizCount = 20;
@@ -948,7 +948,7 @@ async function driveUpdate(id, obj){
 /* --- 병합: 3기기 기록이 섞여도 유실 없게 --- */
 function mergeState(a, b){
   if(!a) return b; if(!b) return a;
-  const out = { history: [], wrongNotes: {}, memos: [] };
+  const out = { askedIds: [...new Set([...(a.askedIds||[]), ...(b.askedIds||[])])], history: [], wrongNotes: {}, memos: [] };
 
   // history: ts 기준 중복 제거 후 시간순
   const hmap = {};
@@ -1089,15 +1089,21 @@ function pickWeighted(total){
   let order = counts.slice().sort((a,b)=>b.rem-a.rem);
   for(let i=0;i<remainder;i++){ order[i % order.length].n++; }
   let result=[];
+  const asked = new Set(appState.askedIds||[]);
   order.forEach(c=>{
-    const pool = shuffle(BANK.filter(q=>q.subject===c.k));
+    const all = BANK.filter(q=>q.subject===c.k);
+    const fresh = shuffle(all.filter(q=>!asked.has(q.id)));
+    const used  = shuffle(all.filter(q=>asked.has(q.id)));
+    const pool = fresh.concat(used);
     result.push(...pool.slice(0, Math.min(c.n, pool.length)));
   });
   return shuffle(result);
 }
 function pickQuestions(subject, count){
   if(subject==='ALL') return pickWeighted(count);
-  const pool = shuffle(BANK.filter(q=>q.subject===subject));
+  const asked = new Set(appState.askedIds||[]);
+  const all = BANK.filter(q=>q.subject===subject);
+  const pool = shuffle(all.filter(q=>!asked.has(q.id))).concat(shuffle(all.filter(q=>asked.has(q.id))));
   return pool.slice(0, Math.min(count, pool.length));
 }
 
@@ -1153,6 +1159,10 @@ function startQuiz(){
   const qs = pickQuestions(quizSubject, quizCount);
   if(qs.length===0){ return; }
   session = { questions: qs, index:0, answers:{}, locked:{} };
+  if(!appState.askedIds) appState.askedIds=[];
+  qs.forEach(q=>{ if(!appState.askedIds.includes(q.id)) appState.askedIds.push(q.id); });
+  if(appState.askedIds.length >= BANK.length) appState.askedIds = [];
+  saveState();
   renderQuiz();
 }
 
@@ -1196,10 +1206,10 @@ function selectChoice(qid, idx){
   const q = session.questions.find(x=>x.id===qid);
   if(q){
     if(idx!==q.a){
-      appState.wrongNotes[q.id] = { id:q.id, subject:q.subject, q:q.q, ch:q.ch, a:q.a, ex:q.ex, chosen: idx, ts: Date.now() };
+      appState.wrongNotes[q.id] = { id:q.id, subject:q.subject, q:q.q, ch:q.ch, a:q.a, ex:q.ex, p:q.p, t:q.t, chosen: idx, ts: Date.now() };
       saveState();
-    } else if(appState.wrongNotes[q.id]){
-      delete appState.wrongNotes[q.id];
+    } else if(appState.wrongNotes[q.id] && !appState.wrongNotes[q.id].mastered){
+      appState.wrongNotes[q.id] = { id:q.id, subject:q.subject, mastered:true, ts: Date.now() };
       saveState();
     }
     renderNotes(); renderMemo();
@@ -1293,9 +1303,9 @@ function renderResult(el){
 function restartFromResult(){ session=null; renderQuiz(); }
 
 /* ---------- 오답노트 탭 ---------- */
-function renderNotes(){
+function renderNotes(){ /* mastered 는 tombstone 이므로 목록에서 제외 */
   const el = document.getElementById('tab-notes');
-  const all = Object.values(appState.wrongNotes).sort((a,b)=>b.ts-a.ts);
+  const all = Object.values(appState.wrongNotes).filter(n=>!n.mastered).sort((a,b)=>b.ts-a.ts);
   const filtered = notesFilter==='ALL'? all : all.filter(n=>n.subject===notesFilter);
 
   let chips = '<div class="chiprow">';
@@ -1335,10 +1345,10 @@ function renderNotes(){
 }
 function setNotesFilter(s){ notesFilter=s; renderNotes(); }
 function retryWrong(){
-  const all = Object.values(appState.wrongNotes);
+  const all = Object.values(appState.wrongNotes).filter(n=>!n.mastered);
   const target = notesFilter==='ALL'? all : all.filter(n=>n.subject===notesFilter);
   if(target.length===0) return;
-  const qs = shuffle(target.map(n=>({id:n.id,subject:n.subject,q:n.q,ch:n.ch,a:n.a,ex:n.ex})));
+  const qs = shuffle(target.map(n=>BANK.find(b=>b.id===n.id) || n));
   session = { questions: qs, index:0, answers:{}, locked:{} };
   document.querySelector('.tabbtn[data-tab="quiz"]').click();
   renderQuiz();
@@ -1401,13 +1411,14 @@ function addMemo(){
   const ta = document.getElementById('memoInput');
   const text = ta ? ta.value.trim() : '';
   if(!text) return;
-  appState.memos.push({ id: 'm'+Date.now(), subject: memoFilter, text, ts: Date.now(), auto:false });
+  appState.memos.push({ id: MEMOID(), subject: memoFilter, text, ts: Date.now(), auto:false });
   memoDraft='';
   saveState();
   renderMemo();
 }
+function MEMOID(){ return 'm'+Date.now()+'_'+Math.random().toString(36).slice(2,8); }
 function generateAutoMemo(subject){
-  const items = Object.values(appState.wrongNotes).filter(n=>n.subject===subject);
+  const items = Object.values(appState.wrongNotes).filter(n=>!n.mastered && n.subject===subject);
   if(items.length===0) return null;
   const lines = [...new Set(items.map(n=>`· ${n.ex}`))];
   const d = new Date();
@@ -1417,8 +1428,8 @@ function generateAutoMemo(subject){
 function autoMemoFromWrong(){
   const text = generateAutoMemo(memoFilter);
   if(!text) return;
-  appState.memos = appState.memos.filter(m => !(m.subject === memoFilter && m.auto === true));
-  appState.memos.push({ id: 'm'+Date.now(), subject: memoFilter, text, ts: Date.now(), auto:true });
+  appState.memos = appState.memos.filter(m=>!(m.subject===memoFilter && m.auto===true));
+  appState.memos.push({ id: MEMOID(), subject: memoFilter, text, ts: Date.now(), auto:true });
   saveState();
   renderMemo();
 }
