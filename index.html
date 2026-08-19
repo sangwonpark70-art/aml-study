@@ -988,7 +988,13 @@ function mergeState(a, b){
 
   // memos: id 기준 중복 제거
   const mmap = {};
-  [...(a.memos||[]), ...(b.memos||[])].forEach(m=>{ if(m && m.id) mmap[m.id]=m; });
+  [...(a.memos||[]), ...(b.memos||[])].forEach(m=>{
+    if(!m || !m.id) return;
+    const prev = mmap[m.id];
+    if(!prev){ mmap[m.id] = m; return; }
+    /* 같은 id면 최신 ts 채택. 삭제 표식은 같은 ts에서도 우선한다 */
+    if(m.ts > prev.ts || (m.ts === prev.ts && m.deleted)) mmap[m.id] = m;
+  });
   out.memos = Object.values(mmap).sort((x,y)=>y.ts-x.ts);
 
   return out;
@@ -1415,14 +1421,14 @@ function renderMemo(){
   const el = document.getElementById('tab-memo');
   let chips = '<div class="chiprow">';
   SUBJECTS.forEach(s=>{
-    const cnt = appState.memos.filter(m=>m.subject===s).length;
+    const cnt = appState.memos.filter(m=>m.subject===s && !m.deleted).length;
     chips += `<button class="chip ${memoFilter===s?'active':''}" onclick="setMemoFilter('${s}')">${s}${cnt?` (${cnt})`:''}</button>`;
   });
   chips += '</div>';
 
   const wrongCount = Object.values(appState.wrongNotes).filter(n=>n.subject===memoFilter).length;
 
-  const list = appState.memos.filter(m=>m.subject===memoFilter).sort((a,b)=>b.ts-a.ts);
+  const list = appState.memos.filter(m=>m.subject===memoFilter && !m.deleted).sort((a,b)=>b.ts-a.ts);
   let listHtml = '';
   if(list.length===0){
     listHtml = `<div class="empty">${memoFilter} 영역에 정리한 메모가 아직 없어요.</div>`;
@@ -1504,13 +1510,19 @@ function generateAutoMemo(subject){
 function autoMemoFromWrong(){
   const text = generateAutoMemo(memoFilter);
   if(!text) return;
-  appState.memos = appState.memos.filter(m=>!(m.subject===memoFilter && m.auto===true));
-  appState.memos.push({ id: MEMOID(), subject: memoFilter, text, ts: Date.now(), auto:true });
+  const now = Date.now();
+  const olds = appState.memos.filter(m=>m.subject===memoFilter && m.auto===true && !m.deleted);
+  appState.memos = appState.memos.filter(m=>!(m.subject===memoFilter && m.auto===true && !m.deleted));
+  olds.forEach(o=>appState.memos.push({ id:o.id, subject:o.subject, deleted:true, ts:now }));
+  appState.memos.push({ id: MEMOID(), subject: memoFilter, text, ts: now+1, auto:true });
   saveState();
   renderMemo();
 }
 function deleteMemo(id){
-  appState.memos = appState.memos.filter(m=>m.id!==id);
+  /* 삭제 표식으로 남긴다 — 제거만 하면 타 기기·원격 사본이 병합 때 되살린다 */
+  const m = appState.memos.find(x=>x.id===id);
+  appState.memos = appState.memos.filter(x=>x.id!==id);
+  appState.memos.push({ id, subject: (m&&m.subject)||memoFilter, deleted:true, ts: Date.now() });
   saveState();
   renderMemo();
 }
