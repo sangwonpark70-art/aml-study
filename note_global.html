@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TPAC 정리노트 — 글로벌기준</title>
+<style>
+:root{--ink:#1a2332;--muted:#6b7280;--line:#e5e7eb;--bg:#f6f6f1;--card:#fff;
+--red:#dc2626;--amber:#d97706;--green:#059669;--gray:#9ca3af;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--ink);
+font-size:15px;line-height:1.65;padding-bottom:60px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 14px;}
+header{background:var(--card);border-bottom:2px solid var(--ink);padding:18px 0 14px;margin-bottom:14px;}
+header h1{font-size:20px;}
+header .sub{font-size:12.5px;color:var(--muted);margin-top:4px;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11.5px;margin-top:8px;color:var(--muted);}
+.legend b{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px;}
+.navlinks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.navlinks a{font-size:12.5px;text-decoration:none;color:var(--ink);background:var(--card);
+border:1px solid var(--line);border-radius:20px;padding:5px 12px;}
+.navlinks a.cur{background:var(--ink);color:#fff;border-color:var(--ink);}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px;}
+.sec h2{font-size:16px;border-left:4px solid var(--ink);padding-left:9px;margin-bottom:4px;}
+.sec .meta{font-size:11.5px;color:var(--muted);margin-bottom:10px;}
+.topic{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);}
+.topic:first-of-type{border-top:none;padding-top:0;}
+.topic h3{font-size:14.5px;margin-bottom:6px;}
+.imp{color:var(--amber);font-size:12px;letter-spacing:1px;}
+.body{font-size:14px;}
+.body p{margin:5px 0;}
+.body .trap{background:#fef2f2;border-left:3px solid var(--red);padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body .amend{background:#fffbeb;border-left:3px solid var(--amber);padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body table{border-collapse:collapse;width:100%;margin:7px 0;font-size:13px;}
+.body td,.body th{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top;}
+.body th{background:#f9fafb;font-weight:600;}
+.qrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:9px;}
+.qchip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;
+border:1px solid var(--line);border-radius:20px;padding:3px 9px;background:#fafafa;color:var(--ink);}
+.qchip .dot{width:8px;height:8px;border-radius:50%;background:var(--gray);}
+.qchip.s0 .dot{background:var(--red);}.qchip.s1 .dot{background:var(--amber);}.qchip.s2 .dot{background:var(--green);}
+.qchip .wc{color:var(--red);font-weight:700;}
+.solve{margin-left:auto;font-size:12px;font-weight:700;color:#fff;background:var(--ink);
+border-radius:20px;padding:5px 13px;text-decoration:none;white-space:nowrap;}
+.summarybar{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;
+margin-bottom:12px;font-size:13px;display:none;}
+.summarybar.on{display:block;}
+.foot{font-size:11.5px;color:var(--muted);text-align:center;margin-top:20px;}
+a.back{color:var(--muted);font-size:12.5px;text-decoration:none;}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="back" href="./index.html">← TPAC 학습노트로</a>
+<h1>정리노트 — 글로벌기준</h1>
+<div class="sub">배점 비중 20% · 10p당 17점 · 관련 문항 40 · 국내제도 다음 우선순위</div>
+<div class="legend">
+<span><b style="background:var(--red)"></b>틀리는 중</span>
+<span><b style="background:var(--amber)"></b>학습 중</span>
+<span><b style="background:var(--green)"></b>안정</span>
+<span><b style="background:var(--gray)"></b>미출제</span>
+<span style="margin-left:auto">숫자 = 누적 오답 횟수</span>
+</div>
+</div></header>
+<div class="wrap">
+
+<div class="navlinks">
+<a class="cur" href="./note_global.html">글로벌기준</a>
+<a href="./note_domestic.html">국내제도</a>
+</div>
+
+<div class="summarybar" id="sumbar"></div>
+
+<div class="sec"><h2>1. FATF — 설립·관할·평가</h2>
+<div class="meta">연도와 순서가 곧 점수인 구간. 숫자를 사건과 묶어 외운다.</div>
+
+<div class="topic" data-qids="G1,G27,G3,G26,G25,G11">
+<h3>① 설립·명칭·관할 확대 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>FATF = <b>Financial Action Task Force</b>, <b>1989년 G7 정상회의</b>에서 <b>마약자금 세탁 방지</b> 목적으로 설립. 한국 가입 <b>1996년</b>.</p>
+<table><tr><th>연도</th><th>관할 확대</th></tr>
+<tr><td>1989</td><td>마약자금 (설립 목적)</td></tr>
+<tr><td>1996</td><td><b>중대범죄</b> 전반으로 확대</td></tr>
+<tr><td>2001</td><td><b>테러자금조달</b> (9·11 직후 8개 특별권고)</td></tr>
+<tr><td>2012</td><td><b>대량살상무기 확산금융(WMD)</b> — 40권고 통합 개정</td></tr></table>
+<p>국내: 특금법 제정·<b>KoFIU 설립 2001년</b> / FATF <b>4차 라운드 상호평가 2019년</b> 수검.</p>
+<div class="trap">함정: "설립 목적 = 테러자금 방지" → X (마약자금). 테러자금은 <b>2001년 이후</b> 편입. 순서를 뒤섞은 선지가 단골이다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NG05,NG06,NG18">
+<h3>② 상호평가(ME) 2축과 등급 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>축</th><th>대상</th><th>등급 4단계</th></tr>
+<tr><td><b>기술적 이행</b> (TC)</td><td>40개 권고의 <b>법령·제도</b> 정비 수준</td><td>C → LC → PC → NC<br>(이행·대부분·부분·미이행)</td></tr>
+<tr><td><b>효과성</b> (EO)</td><td><b>11개 즉시성과(IO)</b>로 실제 작동 여부</td><td>High → Substantial → Moderate → Low</td></tr></table>
+<p>주요 IO: <b>IO.5</b> 법인·법률관계 남용 방지 / <b>IO.9</b> 금융기관 의무이행. ICRG = 미흡국 집중 모니터링 절차.</p>
+<div class="trap">함정 ①: 두 등급 체계를 바꿔 출제한다 — C/LC/PC/NC는 <b>기술적 이행</b>, High/Substantial은 <b>효과성</b>.<br>함정 ②: "PC = 법령이 전혀 없다" → X. 전무는 <b>NC</b>. PC는 일부 갖춰진 상태.<br>함정 ③: 상호평가 등급만으로 대응조치 대상국이 자동 지정되지 않는다 — 별도 절차.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NG15">
+<h3>③ 고위험국가 2단계 성명서 <span class="imp">★★</span></h3>
+<div class="body">
+<p><b>① 대응조치 요구 대상국</b>(통칭 블랙리스트) — 대응조치(counter-measures) 적용 요구. 대표: <b>이란·북한</b>.<br>
+<b>② 강화된 관찰대상국</b>(Jurisdictions under Increased Monitoring, 통칭 그레이리스트) — 강화된 고객확인 등 위험 반영 요구.</p>
+<div class="trap">함정: "블랙리스트 하나만 존재" / "회원국·비회원국으로 구분" → X. <b>2단계 체계</b>임을 묻는다.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>2. 국제협약과 국제기구</h2>
+<div class="meta">협약은 연도+대상범죄 세트, 기구는 성격 구분이 핵심.</div>
+
+<div class="topic" data-qids="G2,NG14,G24">
+<h3>④ 3대 협약 — 연도·대상 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>협약</th><th>연도</th><th>대상</th></tr>
+<tr><td><b>비엔나</b>협약</td><td>1988</td><td>마약 — 자금세탁 <b>최초</b> 범죄화</td></tr>
+<tr><td><b>팔레모</b>협약</td><td>2000</td><td>초국가조직범죄 — 전제범죄 <b>중대범죄 전반</b>으로 확대</td></tr>
+<tr><td><b>메리다</b>협약(UNCAC)</td><td>2003</td><td>부패방지</td></tr></table>
+<p>자금세탁 <b>정의</b>의 국제법적 근거 = <b>비엔나 + 팔레모</b> 2개. 테러자금조달 제도 확산의 직접 계기 = <b>9·11 테러(2001)</b> 및 UN 안보리 결의.</p>
+<div class="trap">함정: 정의 근거를 물으면 <b>비엔나·팔레모</b>다. 메리다(부패)·바젤(은행감독)을 섞은 선지 주의.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NG03,NG04">
+<h3>⑤ 에그몽 그룹 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>1995년</b> 벨기에 브뤼셀 <b>에그몽-아렌버그 궁</b>에서 출범. 각국 <b>FIU 간 정보교환·협력 국제협의체</b>.</p>
+<p>보안 전용망 = <b>ESW</b>(Egmont Secure Web). <b>KoFIU 2002년</b> 가입.</p>
+<div class="trap">함정: 성격이 다른 4개 기구를 섞어 낸다 — FATF(정부간, 권고 제정) / <b>에그몽(FIU 협의체)</b> / BCBS(BIS 산하 은행감독) / 볼프스베르그(민간 은행 협의체). ESW를 SWIFT·goAML로 바꾼 선지도 나온다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NG12,NG13,G12">
+<h3>⑥ 볼프스베르그·BCBS·EU AMLD <span class="imp">★★</span></h3>
+<div class="body">
+<table><tr><th>기구·규범</th><th>성격</th></tr>
+<tr><td><b>볼프스베르그 그룹</b></td><td>글로벌 <b>민간 은행</b> 자율 협의체. 법적 구속력 없음. 프라이빗뱅킹 AML 원칙·환거래은행 실사질의서(CBDDQ)</td>
+</tr><tr><td><b>BCBS</b></td><td>BIS 산하 <b>은행감독 기준</b> 제정. KYC 지침. 제재·수사 권한 없음</td>
+</tr><tr><td><b>APG</b></td><td>FATF <b>아시아·태평양</b> 지역기구(FSRB)</td>
+</tr><tr><td><b>UNODC</b></td><td>유엔 마약·범죄 대응 기구. goAML 개발</td></tr></table>
+<p>EU AMLD: 1차(1991) → <b>3차(2005) RBA 도입</b> → 4차(2015) → <b>5차(2018) 가상자산</b> 편입.</p>
+<div class="trap">함정: RBA 최초 도입 차수를 4차·5차로 바꿔 낸다 → <b>3차(2005)</b>.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>3. 40개 권고 — 번호와 주제</h2>
+<div class="meta">최다 출제 구간. 번호 매칭·개수형으로 반복된다.</div>
+
+<div class="topic" data-qids="NG01,NG10,G6,G7,G8,G22,G21,G20,G23">
+<h3>⑦ 필수 암기 번호 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>번호</th><th>주제</th><th>번호</th><th>주제</th></tr>
+<tr><td><b>1</b></td><td>위험기반접근법(RBA)</td><td><b>16</b></td><td>전신송금(지급 투명성)</td></tr>
+<tr><td><b>2</b></td><td>국가 협력·조정</td><td><b>17</b></td><td>제3자 의존</td></tr>
+<tr><td><b>6</b></td><td>테러 TFS</td><td><b>18</b></td><td>내부통제·해외지점</td></tr>
+<tr><td><b>7</b></td><td>확산금융(WMD) TFS</td><td><b>19</b></td><td>고위험국가</td></tr>
+<tr><td><b>8</b></td><td>비영리조직(NPO)</td><td><b>20</b></td><td><b>의심거래보고(STR)</b></td></tr>
+<tr><td><b>10</b></td><td><b>고객확인(CDD)</b></td><td><b>21</b></td><td><b>정보누설금지+면책</b></td></tr>
+<tr><td><b>11</b></td><td>기록보존</td><td><b>22·23</b></td><td>DNFBPs (고객확인 / 기타)</td></tr>
+<tr><td><b>12</b></td><td><b>PEP</b></td><td><b>24</b></td><td><b>법인 실제소유자</b></td></tr>
+<tr><td><b>13</b></td><td>환거래은행</td><td><b>25</b></td><td>신탁 등 법률관계 BO</td></tr>
+<tr><td><b>14</b></td><td>자금·가치이전(MVTS)</td><td><b>29</b></td><td><b>FIU</b></td></tr>
+<tr><td><b>15</b></td><td>신기술·가상자산</td><td><b>32</b></td><td>현금 국경 휴대반출입</td></tr></table>
+<p>DNFBPs = <b>지정 비금융사업자·전문직</b>(변호사·회계사·부동산중개·귀금속상·카지노 등).</p>
+<div class="trap">가장 잘 틀리는 3쌍 — <b>20(STR) ↔ 21(누설금지)</b> / <b>24(법인 BO) ↔ 25(신탁 BO)</b> / <b>16(전신송금) ↔ 17(제3자 의존)</b>. 개수형에서 이 쌍을 바꿔 넣는다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NG02,NG07,NG09,NG11,NG17">
+<h3>⑧ 개별 권고 심화 — 12·6·7·8·32·40 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>R.12 PEP</b>: 외국 PEP는 위험 무관 <b>항상 EDD</b> / 국내·국제기구 PEP는 위험도에 따라. <b>가족·측근 포함</b>, 퇴임 후에도 일정 기간 유지. PEP는 <b>위험 지표</b>이지 범죄자 확정이 아니며 거래 금지 요구도 아니다.</p>
+<p><b>R.6 / R.7 TFS</b>: 6=테러·테러자금(UN 1267·1373) / 7=WMD 확산금융(북한·이란). 핵심어 <b>without delay</b> — 당국 통보를 기다리지 않고 명단 확인 즉시 동결. 동결 후 <b>STR 제출 + 감독당국 보고</b>. 오탐 해제는 <b>당국 승인</b> 필요(금융기관 임의 불가).</p>
+<p><b>R.8</b> NPO / <b>R.32</b> 현금·무기명 지급수단 국경 휴대 / <b>R.40</b> 기타 형태의 국제협력.</p>
+<div class="trap">TFS 오답 서술: "통보를 받은 후 동결" / "거래 거절로 충분" / "금융기관이 직접 해제" → 전부 X.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NG08,NG16">
+<h3>⑨ R.21 면책·누설금지 / R.1 RBA <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>R.21</b>: ① 보고 사실을 <b>고객·제3자</b>에게 누설 금지 ② <b>선의 보고</b>는 계약상·법률상 비밀유지 위반 아님. 사후에 범죄와 무관으로 밝혀져도 <b>면책 유지</b>(소급 취소 없음) — 결과책임을 지우면 보고가 위축되기 때문.</p>
+<p><b>R.1 RBA</b>: 국가는 위험을 확인·평가하고 문서화·최신화. 고위험 → 강화조치, 저위험 → <b>간소화</b> 허용. 다만 간소화는 절차 일부 완화일 뿐 <b>신원확인 자체 면제가 아니다</b>. NRA 결과는 금융회사 자체 위험평가에 반영되어야 한다.</p>
+<div class="trap">함정: "위험이 낮으면 신원확인 생략 가능" → X. "모든 고객에 동일 CDD 적용" → RBA <b>위반</b>이다.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>4. 국제기준 수치·자금세탁 이론</h2>
+<div class="meta">숫자와 3단계 모델. 국내 기준과 헷갈리지 않게 분리해 외운다.</div>
+
+<div class="topic" data-qids="G9,G10,G29,G28">
+<h3>⑩ FATF 기준 숫자 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>항목</th><th>FATF 기준</th><th>국내 기준(비교)</th></tr>
+<tr><td>기록보존</td><td><b>최소 5년</b><br>거래기록=거래 완료일~ / CDD=관계 종료일~</td><td>거래관계 종료 시부터 5년↑</td></tr>
+<tr><td>일회성 거래 CDD</td><td><b>USD/EUR 15,000</b></td><td>1천만원(외화 1만불)</td></tr>
+<tr><td>전신송금 간소화</td><td>국내 <b>USD 1,000</b> 미만</td><td>트래블룰 100만원↑</td></tr>
+<tr><td>법인 실제소유자</td><td><b>25% 초과</b> 지분 또는 실질 지배력</td><td>25% 이상 → 최대주주 → 대표자</td></tr>
+<tr><td>제재 3요건</td><td colspan="2"><b>효과적·비례적·억제적</b> (R.35)</td></tr></table>
+<p>NRA 참고자료: 국내 수사·감독 통계, FATF 상호평가 결과, 민간 부문 정보 등. 저위험으로 간소화 가능한 보험: 소액·저축성 없는 순수보장성 등(투자형·고액 일시납은 제외).</p>
+<div class="trap">함정: FATF의 <b>15,000</b>과 국내 <b>1천만원</b>을 바꿔 낸다. 문제가 "FATF 국제기준상"인지 "특금법상"인지 먼저 확인할 것.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="G4,G5">
+<h3>⑪ 자금세탁 3단계·특성 <span class="imp">★★</span></h3>
+<div class="body">
+<p><b>예치(Placement) → 은폐·반복(Layering) → 통합(Integration)</b>. 현금 입금은 <b>예치</b> 단계.</p>
+<p>특성: 국제범죄성 · <b>조직</b>범죄성 · 화이트칼라형 · 반복성. <b>개인범죄성은 특성이 아니다.</b></p>
+<div class="trap">함정: 3단계 순서를 뒤집거나(은폐→예치), 특성에 "개인범죄성"을 끼워 넣는다.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="foot">TPAC 정리노트 글로벌기준편 v1.0 (2026-08-20) · 근거: FATF 40권고(2012, 2026.6 갱신판)·Phase1 정리노트·용어정리집·RBA VASP 가이던스<br>
+배지는 이 브라우저의 학습 기록 기준. 다른 기기 기록은 앱에서 "지금 동기화" 후 반영.</div>
+</div>
+
+<script>
+(function(){
+  let st={};
+  try{ st = JSON.parse(localStorage.getItem('aml-study-data')||'{}'); }catch(e){}
+  const wn = st.wrongNotes||{};
+  const stateOf = id => {
+    const n = wn[id];
+    if(!n) return {cls:'',label:'미출제',wc:0};
+    if(!n.mastered) return {cls:'s0',label:'틀리는 중',wc:n.wrongCount||1};
+    return ((n.correctStreak||1)>=3) ? {cls:'s2',label:'안정',wc:n.wrongCount||0}
+                                     : {cls:'s1',label:'학습 중',wc:n.wrongCount||0};
+  };
+  let tot={red:0,amb:0,grn:0,none:0};
+  document.querySelectorAll('.topic').forEach(tp=>{
+    const ids=(tp.dataset.qids||'').split(',').map(x=>x.trim()).filter(Boolean);
+    const row=tp.querySelector('.qrow');
+    ids.forEach(id=>{
+      const s=stateOf(id);
+      if(s.cls==='s0')tot.red++;else if(s.cls==='s1')tot.amb++;else if(s.cls==='s2')tot.grn++;else tot.none++;
+      const chip=document.createElement('span');
+      chip.className='qchip '+s.cls;
+      chip.innerHTML='<span class="dot"></span>'+id+(s.wc>1?' <span class="wc">×'+s.wc+'</span>':'');
+      chip.title=s.label;
+      row.appendChild(chip);
+    });
+    const a=document.createElement('a');
+    a.className='solve'; a.href='./index.html?qids='+ids.join(',');
+    a.textContent='이 주제 풀기 ('+ids.length+')';
+    row.appendChild(a);
+  });
+  const bar=document.getElementById('sumbar');
+  if(tot.red+tot.amb+tot.grn>0){
+    bar.classList.add('on');
+    bar.innerHTML='<b>내 상태</b> — <span style="color:var(--red)">틀리는 중 '+tot.red
+      +'</span> · <span style="color:var(--amber)">학습 중 '+tot.amb
+      +'</span> · <span style="color:var(--green)">안정 '+tot.grn
+      +'</span> · 미출제 '+tot.none
+      +' <span style="color:var(--muted)">(빨간 주제부터 "이 주제 풀기")</span>';
+  }
+})();
+</script>
+</body>
+</html>
