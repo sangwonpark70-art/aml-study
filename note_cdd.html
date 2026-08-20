@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TPAC 정리노트 — CDD</title>
+<style>
+:root{--ink:#1a2332;--muted:#6b7280;--line:#e5e7eb;--bg:#f6f6f1;--card:#fff;
+--red:#dc2626;--amber:#d97706;--green:#059669;--gray:#9ca3af;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--ink);
+font-size:15px;line-height:1.65;padding-bottom:60px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 14px;}
+header{background:var(--card);border-bottom:2px solid var(--ink);padding:18px 0 14px;margin-bottom:14px;}
+header h1{font-size:20px;}
+header .sub{font-size:12.5px;color:var(--muted);margin-top:4px;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11.5px;margin-top:8px;color:var(--muted);}
+.legend b{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px;}
+.navlinks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.navlinks a{font-size:12.5px;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px;}
+.navlinks a.cur{background:var(--ink);color:#fff;border-color:var(--ink);}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px;}
+.sec h2{font-size:16px;border-left:4px solid var(--ink);padding-left:9px;margin-bottom:4px;}
+.sec .meta{font-size:11.5px;color:var(--muted);margin-bottom:10px;}
+.topic{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);}
+.topic:first-of-type{border-top:none;padding-top:0;}
+.topic h3{font-size:14.5px;margin-bottom:6px;}
+.imp{color:var(--amber);font-size:12px;letter-spacing:1px;}
+.body{font-size:14px;}
+.body p{margin:5px 0;}
+.body .trap{background:#fef2f2;border-left:3px solid var(--red);padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body .amend{background:#fffbeb;border-left:3px solid var(--amber);padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body table{border-collapse:collapse;width:100%;margin:7px 0;font-size:13px;}
+.body td,.body th{border:1px solid var(--line);padding:5px 7px;text-align:left;}
+.body th{background:#f9fafb;font-weight:600;}
+.qrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:9px;}
+.qchip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;
+border:1px solid var(--line);border-radius:20px;padding:3px 9px;background:#fafafa;color:var(--ink);}
+.qchip .dot{width:8px;height:8px;border-radius:50%;background:var(--gray);}
+.qchip.s0 .dot{background:var(--red);}.qchip.s1 .dot{background:var(--amber);}.qchip.s2 .dot{background:var(--green);}
+.qchip .wc{color:var(--red);font-weight:700;}
+.solve{margin-left:auto;font-size:12px;font-weight:700;color:#fff;background:var(--ink);
+border-radius:20px;padding:5px 13px;text-decoration:none;white-space:nowrap;}
+.summarybar{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;
+margin-bottom:12px;font-size:13px;display:none;}
+.summarybar.on{display:block;}
+.foot{font-size:11.5px;color:var(--muted);text-align:center;margin-top:20px;}
+a.back{color:var(--muted);font-size:12.5px;text-decoration:none;}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="back" href="./index.html">← TPAC 학습노트로</a>
+<h1>정리노트 — CDD</h1>
+<div class="sub">배점 비중 15% · 10p당 13점 (실무편 최고 효율) · 관련 문항 45</div>
+<div class="legend">
+<span><b style="background:var(--red)"></b>틀리는 중</span>
+<span><b style="background:var(--amber)"></b>학습 중</span>
+<span><b style="background:var(--green)"></b>안정</span>
+<span><b style="background:var(--gray)"></b>미출제</span>
+<span style="margin-left:auto">숫자 = 누적 오답 횟수</span>
+</div>
+</div></header>
+<div class="wrap">
+
+<div class="navlinks">
+<a href="./note_global.html">글로벌기준</a>
+<a href="./note_domestic.html">국내제도</a>
+<a class="cur" href="./note_cdd.html">CDD</a>
+</div>
+
+<div class="summarybar" id="sumbar"></div>
+
+<div class="sec"><h2>1. CDD의 뼈대 — 무엇을, 어떻게 확인하는가</h2>
+<div class="meta">용어 정의형이 매년 나온다. 특히 확인 ↔ 검증 구분.</div>
+
+<div class="topic" data-qids="C1,C46,C20,C39">
+<h3>① 확인사항 4종 · 확인(Identify)과 검증(Verify) <span class="imp">★★★</span></h3>
+<div class="body">
+<p>CDD가 확인하는 것: <b>고객 신원 · 실제소유자 · 거래목적 · 자금원천</b>. 신용등급 평가는 CDD 항목이 <b>아니다</b>(여신 심사 영역).</p>
+<table><tr><th>구분</th><th>내용</th></tr>
+<tr><td><b>확인</b>(Identify)</td><td>문서·질문 등으로 고객에게서 <b>정보를 획득</b>하는 과정</td></tr>
+<tr><td><b>검증</b>(Verify)</td><td>객관적·신뢰할 수 있는 문서·자료·정보로 <b>그 정보가 맞는지 확인</b>하는 과정 (업무규정 제20조)</td></tr></table>
+<p>검증 결과 고객이 제시한 정보와 금융회사가 이미 보유한 정보에 <b>차이가 있으면 그 차이를 확인해 기록·관리</b>한다(사례17).</p>
+<div class="trap">함정: "확인=서류 징구 / 검증=전산 조회", "확인=최초 1회 / 검증=정기적", "확인=개인 / 검증=법인" — 전부 오답 선지. 둘을 <b>정보 획득 ↔ 사실 대조</b>로 갈라야 한다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="C7,C8">
+<h3>② 지속적 고객확인 · 재이행 시점 <span class="imp">★★</span></h3>
+<div class="body">
+<p>CDD는 최초 1회로 끝나지 않는다. <b>거래관계가 지속되는 동안 정기적으로 정보를 재확인</b>한다(업무규정 제34조①).</p>
+<p>재이행(갱신) 시점: <b>고객정보 변경을 인지</b>했거나 <b>위험평가 결과 위험도가 변경</b>된 때.</p>
+<div class="trap">함정: "5년마다 1회", "고객이 요청할 때만", "고위험 고객에게는 적용하지 않는다" — 전부 X. 특히 <b>고위험일수록 주기가 짧아진다</b>(제외가 아니라 강화).</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>2. 적용 기준 — 신규개설이냐, 일회성거래냐</h2>
+<div class="meta">이 갈림길에서 금액 기준이 갈린다. CDD 문항의 최다 출제 구간.</div>
+
+<div class="topic" data-qids="C24,C25,C33">
+<h3>③ "계좌의 신규 개설" 범위 — 금액 무관 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>신규 개설 = <b>계속적 금융거래를 목적으로 계약을 체결</b>하는 것(업무규정 제22조). <b>거래금액과 무관하게</b> CDD 대상.</p>
+<p>해당 예: 예금·위탁매매계좌 개설, 보험·공제계약·대출·보증·팩토링 계약 체결, 양도성예금증서·표지어음 발행, 펀드 신규 가입, <b>충전 가능한 기명식 선불카드 발급</b>(사례25).</p>
+<div class="trap">함정: <b>무통장 입금(송금)</b>은 신규개설이 아니라 <b>일회성 금융거래</b>다. "1천만원 이상일 때만 확인"도 오답 — 신규개설은 금액 기준이 없다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="C30,C40,C38,C35">
+<h3>④ 일회성 금융거래 기준금액 세트 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>거래 유형</th><th>기준금액</th></tr>
+<tr><td>카지노 거래</td><td>3백만원</td></tr>
+<tr><td>가상자산 거래</td><td>1백만원</td></tr>
+<tr><td>전신송금</td><td>1백만원</td></tr>
+<tr><td>외국통화 표시 외국환거래</td><td>미화 1만 달러</td></tr>
+<tr><td><b>그 밖의 일회성 금융거래</b></td><td><b>1천만원</b> (시행령 제10조의3)</td></tr></table>
+<p>일회성으로 보는 사례: <b>소액해외송금업자를 통한 외화송금</b>(계약관계 없음, 업무규정 제23조①1호·사례23) / <b>체육진흥투표권 환급금을 기존 계좌가 아닌 현금 1천만원↑로 직접 지급</b>(사례31) / <b>PG업자가 가맹점 지정 제3자에게 정산대금 지급</b> — 제3자도 고객으로 보아 요건 충족 시 확인(사례29).</p>
+<div class="trap">함정: "그 밖의 일회성 금융거래 = 5백만원" 이 오답 단골. 5백만원 기준은 없다. 카지노 3백 ↔ 가상자산·전신송금 1백을 서로 바꿔 내기도 한다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="C26,C27,C28,C29,NC03">
+<h3>⑤ 연결거래 7일 · 단절거래 vs 대체거래 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>연결거래</b>: 동일인 명의 일회성 금융거래로서 <b>7일</b> 동안 합산액이 기준금액 이상인 거래(업무규정 제23조②).</p>
+<p><b>확인 시점</b>: 연결거래 <b>이후 최초로 금융거래를 하는 시점</b>(제23조③). 7일 경과 시점도, 최초 거래 시점도 아니다.</p>
+<table><tr><th>거래</th><th>내용</th><th>CDD 대상</th></tr>
+<tr><td><b>단절거래</b></td><td>1천만원↑ 현금 출금 후 곧바로 자기앞수표 발행</td><td><b>대상</b> (사례22①)</td></tr>
+<tr><td><b>대체거래</b></td><td>출금 없이 통장에서 바로 대체 처리해 수표 발행 — 현금 수수 없음</td><td><b>대상 아님</b> (사례22②)</td></tr></table>
+<div class="trap">최중요 혼동 쌍: <b>연결거래 합산 = 7일</b> ↔ <b>CTR(고액현금거래보고) 합산 = 1거래일</b>. 개수형 지문에 이 둘을 나란히 놓고 하나만 틀리게 쓰는 방식이 반복된다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="C36,C37">
+<h3>⑥ 기존 고객이 새 서비스에 가입할 때 <span class="imp">★★</span></h3>
+<div class="body">
+<p>판단 축은 하나다 — <b>계좌를 개설해 준 금융회사와 서비스를 제공하는 금융회사가 같은가</b>.</p>
+<table><tr><th>상황</th><th>처리</th></tr>
+<tr><td>당행 계좌 보유 고객이 <b>당행</b> 간편결제 가입</td><td>이미 고객확인을 이행했으므로 <b>별도 확인 생략 가능</b>. 단 <b>지속적 고객확인 의무는 유지</b>(업무규정 제34조①·사례30②)</td></tr>
+<tr><td><b>타행</b> 계좌를 결제수단으로 오픈뱅킹 API를 통해 당행 간편결제 이용</td><td>계좌 개설 은행과 <b>다른</b> 금융회사가 새 상품·서비스를 제공하는 것이므로 <b>별도 고객확인 이행</b>(사례30①)</td></tr></table>
+<div class="trap">함정: "타행이 이미 확인했으므로 생략 가능" → X. 확인 의무는 <b>거래관계를 맺는 금융회사 각자</b>에게 있다. "단순 플랫폼 제공이라 불필요"도 오답.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>3. 신원확인 항목 — 개인 · 법인 · 해외법인</h2>
+<div class="meta">항목 나열형. "포함되지 않는 것"을 묻는 방식이 정형.</div>
+
+<div class="topic" data-qids="C5,C31,C32">
+<h3>⑦ 확인 항목과 영리 ↔ 비영리 구분 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>개인: <b>실명확인증표</b>(주민등록증 등)로 확인하는 것이 원칙. 구두 진술·자진신고서·타인 확인으로 대체 불가.</p>
+<table><tr><th>구분</th><th>확인 항목 (시행령 제10조의4)</th></tr>
+<tr><td><b>영리법인</b></td><td>실지명의 · 업종 · 본점 및 사업장 소재지 · 연락처 · 대표자의 성명·생년월일·국적</td></tr>
+<tr><td><b>비영리법인·단체</b></td><td>위 항목 + <b>설립목적</b></td></tr></table>
+<p><b>해외법인</b>도 대표자의 성명·생년월일·국적은 <b>국내법인과 공통으로 필수</b>다. 소재국 개인정보 법률을 이유로 제공을 거부해도 면제되지 않으며, 동명이인 식별을 위한 최소 정보로 본다(사례32).</p>
+<div class="trap">함정: 영리법인 항목에 <b>설립목적</b>을 끼워 넣는 방식. 해외법인에 대해 "최선의 노력을 문서화하면 이행한 것으로 본다", "소재국 법률이 우선하므로 면제" — 전부 X.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>4. 실제소유자 확인</h2>
+<div class="meta">UBO 실무와 직결. 사례형(15점) 출제 구간이기도 하다.</div>
+
+<div class="topic" data-qids="C4,NC04,NC05">
+<h3>⑧ 정의와 3단계 확인 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>정의: 형식적 명의와 무관하게 <b>최종적으로 지배지분을 보유한 자연인</b>. 등기부상 대표이사·설립자·최대 매출 임원이 아니다.</p>
+<p>확인 순서: <b>① 25%↑ 지분 보유 개인 → ② (없거나 확인 곤란 시) 최다 지분 보유자 등 → ③ 대표자</b>. 단계적으로만 내려가며, <b>실제소유자는 복수일 수 있다</b>.</p>
+<p>사례 판단의 뼈대: 해외 소재 주주라 최종 실제소유자 추적이 곤란 + 사업장 실체 불분명 + 개설 직후 고액 해외송금 예정처럼 <b>위험요소가 중첩</b>되면 → <b>EDD 수행</b> → 그래도 확인 불가면 <b>거래 거절·종료 + STR 검토</b>.</p>
+<div class="trap">함정: "25%↑ 주주가 있으니 추가 확인 없이 그를 기재하고 개시" → X(그 주주가 해외법인이면 그 위를 더 봐야 한다). "신설법인은 위험이 낮아 SDD 적용" → X(신설·실체 불명은 오히려 위험요소). "법인은 실제소유자 확인 의무가 없다" → X.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>5. 위험기반접근 — SDD · EDD · PEP</h2>
+<div class="meta">CDD 문항의 절반이 여기 몰려 있다. 정의 → 적용대상 → 예외 순으로 외운다.</div>
+
+<div class="topic" data-qids="C21,C41">
+<h3>⑨ 반영해야 할 위험 3종과 국가위험 자료 <span class="imp">★★</span></h3>
+<div class="body">
+<p>업무규정 제28조 — <b>국가위험 · 고객위험(고객유형) · 상품 및 서비스 위험</b>.</p>
+<p>국가위험 평가에 쓰는 공신력 있는 자료: <b>FATF의 권고기준 이행 취약국가 리스트</b>, <b>FATF 고위험·모니터링 대상 국가 목록</b>, <b>UN 등 국제기구 제재 리스트</b>, <b>국제투명성기구 부패 관련 리스트</b>.</p>
+<div class="trap">함정: 신용·시장·운영위험(은행 리스크관리 3종)을 끼워 넣는 오답. 임직원의 주관적 인상·경험은 평가 근거가 될 수 없다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="C3,C22,C23,C34,NC06,NC08">
+<h3>⑩ 간소화된 고객확인(SDD) — 완화이지 면제가 아니다 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>정의: 위험이 낮게 평가된 고객·상품에 대해 고객확인 <b>절차와 방법 중 일부를 적용하지 않을 수 있는</b> 것. <b>신원확인 자체는 생략 불가</b>.</p>
+<p>적용 가능 예(FATF): FATF 기준을 준수하며 효과적으로 감독받는 금융회사 / 실제소유자 투명성 공시의무가 있는 상장기업 / 행정기관·공기업 / <b>연간 보험료 USD·EUR 1,000 미만 또는 1회 납부액 2,500 미만인 생명보험</b>(권고 10 주석).</p>
+<p><b>적용 불가</b>: 자금세탁이 의심되거나 위험이 높게 평가된 경우 / <b>FATF 권고를 효과적으로 이행하지 않는 국가의 국민·법인</b> / 고위험국 소재 비상장 법인.</p>
+<p>고객확인 <b>면제</b>가 가능한 좁은 예외: <b>발행권면 최고한도 50만원인 무기명 선불전자지급수단</b>(감독규정 제21조 6호·사례28) — 기명식·충전형은 해당 없음(③ 참조).</p>
+<div class="trap">암기 축: SDD=<b>저위험 → 절차 일부 완화</b>, EDD=<b>고위험 → 추가 정보 확인</b>. 빈칸형에서 "면제된 고객확인"·"지속적 고객확인"을 짝으로 끼워 넣는다. 보험 금액은 <b>1,000 / 2,500</b> — 500/1,000, 2,500/5,000로 흔들어 낸다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="C2,C6,C9,C42,C43,C44,NC07">
+<h3>⑪ 강화된 고객확인(EDD) — 요건 · 추가항목 · 한계 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>법정 요건</b>: 고객이 실제소유자인지 의심되는 등 <b>자금세탁·공중협박자금조달 우려가 있는 경우</b>(특금법 제5조의2①2호). "1천만원 이상", "외국인", "신규 개설", "현금거래"는 요건이 아니다.</p>
+<p><b>추가 확인항목</b>: 거래목적 · 자금(재산)의 원천 — 실무상 직업·재산현황 포함. <b>가족관계증명서(형제자매 관계)는 항목이 아니다</b>.</p>
+<p><b>범위의 한계</b>: 무제한이 아니라 <b>위험성에 비례하여 합리적으로 가능하다고 판단하는 범위</b>로 한정(같은 호 나목). 내규·고객 동의·FIU 사전승인이 기준선이 아니다.</p>
+<p>적용 사례: 고위험국가 거주 신규 고객, PEP, 고액현금거래 고객. 정기 급여이체·소액 정기적금·공공요금 자동이체·<b>급여계좌 개설 근로자</b>는 통상 고위험군이 아니다(반면 비거주 외국인·현금집중업종은 고위험군).</p>
+<div class="amend">비례성 사례(사례24): 보험회사가 국내법령 요구 수준을 넘는 정보를 요구하면서 미이행 시 중도인출·추가납입·해지를 제약하는 것은, <b>위험성·비례성 없는 과도한 요구로 계약자 권리를 축소</b>하는 것이어서 기초서류에 담는 데 신중해야 한다(보험업법 제128조의3 취지).</div>
+<div class="trap">함정: "EDD는 제한 없이 모든 정보를 요구할 수 있다" → X. 반대로 "어떠한 경우에도 제약할 수 없다"도 X. 정답 축은 언제나 <b>비례성</b>이다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="NC01,NC02">
+<h3>⑫ 정치적 주요인물(PEP) <span class="imp">★★★</span></h3>
+<div class="body">
+<p>범주: <b>외국 PEP</b>(위험도와 무관하게 강화된 확인 대상) + <b>국내 PEP</b> + <b>국제기구 PEP</b>, 그리고 <b>가족 및 밀접한 관계에 있는 자</b>. 퇴임 후에도 일정 기간 위험을 고려한다.</p>
+<p>요구되는 조치 3종: <b>① 거래관계 수립·유지에 대한 고위경영진 승인 ② 재산·자금 원천 확인을 위한 합리적 조치 ③ 강화된 지속적 모니터링</b>(FATF 권고 12).</p>
+<div class="trap">함정: "PEP이면 그 자체로 자금세탁 범죄자" → X. PEP는 <b>위험 지표</b>일 뿐이고, 권고 12는 <b>위험 관리</b>를 요구하지 거래 거절을 요구하지 않는다. 조합형에 "신원확인 전면 생략"을 섞어 넣는 것도 정형.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>6. 확인이 의심스럽거나 불가능할 때</h2>
+<div class="meta">조치 "순서"를 묻는다. STR 연계가 마지막에 붙는 것이 핵심.</div>
+
+<div class="topic" data-qids="C47,C45">
+<h3>⑬ 진위 확인 → 거절·종료 → STR 검토 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>확인한 사항이 의심스러운 경우</b>: 출처를 신뢰할 만한 문서·정보 그 밖의 확인자료로 <b>진위 여부를 확인</b>하고, 그 확인자료·확인방법을 업무지침에 반영해 운용한다(시행령 제10조의2③).</p>
+<p><b>고객확인을 할 수 없는 경우</b>: <b>신규 거래를 거절하고 기존 거래를 종료</b> → 그 후 <b>의심거래보고(STR) 여부를 검토</b>(특금법 제5조의2④·⑤).</p>
+<div class="trap">함정: "즉시 FIU에 보고하고 거래는 유지" → X. "FIU에 판단을 의뢰" → X(판단 주체는 금융회사). 순서를 뒤집어 "거래 종료 → 거절 → FIU 신고"로 낸 선지도 오답 — 거절·종료가 먼저고 STR 검토가 뒤다.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="foot">TPAC 정리노트 CDD편 v1.0 (2026-08-20) · 근거: 특금법 제5조의2·시행령 제10조의2~10조의4·업무규정(FIU고시 제2025-2호) 제20·22·23·28·34조·감독규정 제21조·FATF 권고 10/12·FIU 유권해석사례집 2.0<br>
+배지는 이 브라우저의 학습 기록 기준. 다른 기기 기록은 앱에서 "지금 동기화" 후 반영.</div>
+</div>
+
+<script>
+/* 앱 localStorage(aml-study-data) 읽어 문항 상태 배지 렌더 */
+(function(){
+  let st={};
+  try{ st = JSON.parse(localStorage.getItem('aml-study-data')||'{}'); }catch(e){}
+  const wn = st.wrongNotes||{};
+  const stateOf = id => {
+    const n = wn[id];
+    if(!n) return {cls:'',label:'미출제',wc:0};
+    if(!n.mastered) return {cls:'s0',label:'틀리는 중',wc:n.wrongCount||1};
+    return ((n.correctStreak||1)>=3) ? {cls:'s2',label:'안정',wc:n.wrongCount||0}
+                                     : {cls:'s1',label:'학습 중',wc:n.wrongCount||0};
+  };
+  let tot={red:0,amb:0,grn:0,none:0};
+  document.querySelectorAll('.topic').forEach(tp=>{
+    const ids=(tp.dataset.qids||'').split(',').map(x=>x.trim()).filter(Boolean);
+    const row=tp.querySelector('.qrow');
+    ids.forEach(id=>{
+      const s=stateOf(id);
+      if(s.cls==='s0')tot.red++;else if(s.cls==='s1')tot.amb++;else if(s.cls==='s2')tot.grn++;else tot.none++;
+      const chip=document.createElement('span');
+      chip.className='qchip '+s.cls;
+      chip.innerHTML='<span class="dot"></span>'+id+(s.wc>1?' <span class="wc">×'+s.wc+'</span>':'');
+      chip.title=s.label;
+      row.appendChild(chip);
+    });
+    const a=document.createElement('a');
+    a.className='solve'; a.href='./index.html?qids='+ids.join(',');
+    a.textContent='이 주제 풀기 ('+ids.length+')';
+    row.appendChild(a);
+  });
+  const bar=document.getElementById('sumbar');
+  if(tot.red+tot.amb+tot.grn>0){
+    bar.classList.add('on');
+    bar.innerHTML='<b>내 상태</b> — <span style="color:var(--red)">틀리는 중 '+tot.red
+      +'</span> · <span style="color:var(--amber)">학습 중 '+tot.amb
+      +'</span> · <span style="color:var(--green)">안정 '+tot.grn
+      +'</span> · 미출제 '+tot.none
+      +' <span style="color:var(--muted)">(빨간 주제부터 "이 주제 풀기")</span>';
+  }
+})();
+</script>
+</body>
+</html>

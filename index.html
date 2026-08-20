@@ -835,6 +835,31 @@ ex:'손실을 감수한 조기 해지, 제3자 지급 요청, 자금출처 소�
   if (bs.length) { console.error('[BANK_EXT] 선지/정답 오류:', bs); return; }
 
   BANK.push.apply(BANK, BANK_EXT);
+/* pt_patch_cdd */
+/* ── p·t 소급 부여: CDD 37문항 (2026-08-20, §7 결측 해소 1차) ──
+   원본 143문항에는 p(배점)·t(유형)가 없어 QP() 기본값 10점으로 일률 채점됐다.
+   CDD 영역부터 부여한다. 이미 값이 있는 문항(NC01~NC08)은 건드리지 않는다. */
+(function(){
+  var PT={
+    C1:[5,'basic'],   C2:[5,'basic'],   C3:[10,'basic'],  C4:[10,'basic'],
+    C5:[5,'basic'],   C6:[10,'basic'],  C7:[10,'basic'],  C8:[10,'basic'],
+    C9:[5,'basic'],   C20:[15,'basic'], C21:[10,'basic'], C22:[10,'basic'],
+    C23:[10,'basic'], C24:[10,'basic'], C25:[5,'basic'],  C26:[15,'basic'],
+    C27:[15,'basic'], C28:[15,'basic'], C29:[15,'basic'], C30:[10,'basic'],
+    C31:[10,'basic'], C32:[15,'basic'], C33:[10,'basic'], C34:[5,'basic'],
+    C35:[10,'basic'], C36:[10,'basic'], C37:[10,'basic'], C38:[10,'basic'],
+    C39:[10,'basic'], C40:[10,'basic'], C41:[10,'basic'], C42:[10,'basic'],
+    C43:[15,'basic'], C44:[10,'basic'], C45:[15,'basic'], C46:[5,'basic'],
+    C47:[10,'basic']
+  };
+  for(var i=0;i<BANK.length;i++){
+    var q=BANK[i], m=PT[q.id];
+    if(!m) continue;
+    if(q.p===undefined||q.p===null) q.p=m[0];
+    if(q.t===undefined||q.t===null) q.t=m[1];
+  }
+})();
+
   console.log('[BANK_EXT] 병합 완료 — 총 ' + BANK.length + '문항');
 })();
 
