@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TPAC 정리노트 — CTR·STR</title>
+<style>
+:root{--ink:#1a2332;--muted:#6b7280;--line:#e5e7eb;--bg:#f6f6f1;--card:#fff;
+--red:#dc2626;--amber:#d97706;--green:#059669;--gray:#9ca3af;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--ink);
+font-size:15px;line-height:1.65;padding-bottom:60px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 14px;}
+header{background:var(--card);border-bottom:2px solid var(--ink);padding:18px 0 14px;margin-bottom:14px;}
+header h1{font-size:20px;}
+header .sub{font-size:12.5px;color:var(--muted);margin-top:4px;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11.5px;margin-top:8px;color:var(--muted);}
+.legend b{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px;}
+.navlinks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.navlinks a{font-size:12.5px;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 12px;}
+.navlinks a.cur{background:var(--ink);color:#fff;border-color:var(--ink);}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px;}
+.sec h2{font-size:16px;border-left:4px solid var(--ink);padding-left:9px;margin-bottom:4px;}
+.sec .meta{font-size:11.5px;color:var(--muted);margin-bottom:10px;}
+.topic{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);}
+.topic:first-of-type{border-top:none;padding-top:0;}
+.topic h3{font-size:14.5px;margin-bottom:6px;}
+.imp{color:var(--amber);font-size:12px;letter-spacing:1px;}
+.body{font-size:14px;}
+.body p{margin:5px 0;}
+.body .trap{background:#fef2f2;border-left:3px solid var(--red);padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body .amend{background:#fffbeb;border-left:3px solid var(--amber);padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body .calc{background:#eff6ff;border-left:3px solid #2563eb;padding:6px 9px;margin:7px 0;font-size:13.5px;border-radius:0 5px 5px 0;}
+.body table{border-collapse:collapse;width:100%;margin:7px 0;font-size:13px;}
+.body td,.body th{border:1px solid var(--line);padding:5px 7px;text-align:left;}
+.body th{background:#f9fafb;font-weight:600;}
+.qrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:9px;}
+.qchip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;
+border:1px solid var(--line);border-radius:20px;padding:3px 9px;background:#fafafa;color:var(--ink);}
+.qchip .dot{width:8px;height:8px;border-radius:50%;background:var(--gray);}
+.qchip.s0 .dot{background:var(--red);}.qchip.s1 .dot{background:var(--amber);}.qchip.s2 .dot{background:var(--green);}
+.qchip .wc{color:var(--red);font-weight:700;}
+.solve{margin-left:auto;font-size:12px;font-weight:700;color:#fff;background:var(--ink);
+border-radius:20px;padding:5px 13px;text-decoration:none;white-space:nowrap;}
+.summarybar{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;
+margin-bottom:12px;font-size:13px;display:none;}
+.summarybar.on{display:block;}
+.foot{font-size:11.5px;color:var(--muted);text-align:center;margin-top:20px;}
+a.back{color:var(--muted);font-size:12.5px;text-decoration:none;}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="back" href="./index.html">← TPAC 학습노트로</a>
+<h1>정리노트 — CTR·STR·이상거래</h1>
+<div class="sub">배점 비중 20% · 200점 (실무편 최대) · 관련 문항 41</div>
+<div class="legend">
+<span><b style="background:var(--red)"></b>틀리는 중</span>
+<span><b style="background:var(--amber)"></b>학습 중</span>
+<span><b style="background:var(--green)"></b>안정</span>
+<span><b style="background:var(--gray)"></b>미출제</span>
+<span style="margin-left:auto">숫자 = 누적 오답 횟수</span>
+</div>
+</div></header>
+<div class="wrap">
+
+<div class="navlinks">
+<a href="./note_global.html">글로벌기준</a>
+<a href="./note_domestic.html">국내제도</a>
+<a href="./note_cdd.html">CDD</a>
+<a class="cur" href="./note_ctrstr.html">CTR·STR</a>
+</div>
+
+<div class="summarybar" id="sumbar"></div>
+
+<div class="sec"><h2>1. 두 제도의 뼈대</h2>
+<div class="meta">모든 문항이 결국 이 대비표로 환원된다. 여기가 흔들리면 사례형에서 전부 무너진다.</div>
+
+<div class="topic" data-qids="S9,S39">
+<h3>① CTR ↔ STR 대비 <span class="imp">★★★</span></h3>
+<div class="body">
+<table><tr><th>구분</th><th>CTR (고액현금거래보고)</th><th>STR (의심거래보고)</th></tr>
+<tr><td>판단 성격</td><td><b>객관적</b> — 기준금액 이상이면 반드시</td><td><b>주관적</b> — 의심할 합당한 근거</td></tr>
+<tr><td>금액 기준</td><td><b>1천만원</b></td><td><b>없음</b> (2013년 폐지)</td></tr>
+<tr><td>합산 단위</td><td><b>1거래일</b>·동일인·동일 금융회사</td><td>해당 없음</td></tr>
+<tr><td>보고기한</td><td><b>30일</b> 이내</td><td>보고대상 결정일부터 <b>3영업일</b> 이내</td></tr>
+<tr><td>대상 거래</td><td>현금등의 지급·영수</td><td>거래 형태 무관</td></tr>
+<tr><td>취지</td><td>자금흐름 추적용 객관적 근거자료 축적</td><td>자금세탁 혐의 정보의 단서 제공</td></tr></table>
+<div class="trap">함정: "CTR은 임의보고, STR은 의무보고" → 둘 다 <b>의무</b>다. "보고 대상 기관이 다르다" → 둘 다 <b>FIU</b>. "CTR은 해외거래, STR은 국내거래" → 무관.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S1,S2,NX01,S30">
+<h3>② CTR 기준금액 · 합산 단위 · 동일인 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>기준금액 <b>1천만원</b>, <b>2019년 7월</b>부터 적용. 합산 단위는 <b>1거래일 동안 동일인이 동일 금융회사에서</b> 지급하거나 영수한 금액.</p>
+<p><b>동일인 명의</b> = 금융실명법 제2조 제4호의 <b>실지명의가 동일한 것</b>(시행령 제8조의2③). 같은 주소·같은 가족·같은 사업자등록번호가 아니다.</p>
+<div class="calc">기준금액 변천: <b>5천만 → 3천만 → 2천만 → 1천만</b>(2019.7). 연혁을 순서로 묻는 문항이 있다.</div>
+<div class="trap">최중요 혼동 3종: <b>CTR 1거래일</b> ↔ <b>CDD 연결거래 7일</b> ↔ <b>CTR 보고기한 30일</b>. 또 합산은 <b>금융회사별</b>이라, 같은 사람이 A은행 600만·B은행 700만을 넣어도 각 은행에서는 보고대상이 아니다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S7,S11">
+<h3>③ 대상 거래와 제도 취지 <span class="imp">★★</span></h3>
+<div class="body">
+<p>대상은 <b>실물 현금(외국통화 제외)의 입금·출금</b>. 계좌이체·신용카드 결제·펀드 환매·외화송금은 대상이 아니다.</p>
+<p>취지: 일정 금액 이상 현금거래 정보를 축적해 <b>자금흐름을 추적할 객관적 근거자료를 확보</b>하는 것. 고객 신용평가·수익 증대와 무관하다.</p>
+<div class="trap">함정: "현금과 수표를 모두 합산한다" → 원칙적으로 대상은 현금이다. 수표 취급은 카지노 관련 별도 규정(④ 참조).</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>2. CTR 합산과 예외 — 계산형의 본진</h2>
+<div class="meta">후기가 반복해 지목하는 구간. 합산 대상·제외를 뒤집은 선지가 정형이다.</div>
+
+<div class="topic" data-qids="S29,S31,S32">
+<h3>④ 합산에서 빼는 항목 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>기준금액 산정 시 <b>합산하지 않는</b> 것:</p>
+<table><tr><th>항목</th></tr>
+<tr><td>100만원 이하의 <b>원화 송금</b> 금액</td></tr>
+<tr><td>100만원 이하에 상당하는 <b>외국통화 매입·매각</b> 금액</td></tr>
+<tr><td><b>공과금</b> 수납 금액</td></tr>
+<tr><td><b>법원공탁금·정부보관금·송달료</b> 지출 금액</td></tr>
+<tr><td><b>은행지로장표</b>에 의하여 수납한 금액</td></tr>
+<tr><td>100만원 이하 <b>선불카드</b> 거래금액</td></tr></table>
+<p><b>수표(카지노)</b>: 권면액 100만원 <b>이하</b> 수표는 산정 시 합산하지 않는다. 권면액 100만원 <b>초과</b> 수표는 원칙적으로 합산하나, <b>실지명의를 확인하고 실지명의·수표번호를 기록·관리하면 산입하지 않을 수 있다</b>(시행령 제8조의3 단서).</p>
+<div class="calc">사례 계산: 카지노에서 권면 100만원 이하 수표 1,000만원 + 현금 500만원으로 칩 구입 → 수표 제외, <b>현금 500만원만</b> 고려 → 보고대상 아님.</div>
+<div class="trap">함정: <b>현금 인출</b>을 제외 항목에 섞어 넣는다. 현금 입출금은 언제나 합산 대상이다. 또 "권면 100만원 초과 수표는 반드시 합산" → 기록·관리 시 예외가 있다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S35,S33,S34">
+<h3>⑤ 보고 예외와 의무 주체 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>법 제4조의2① 단서 — 보고하지 않는 경우: <b>다른 금융회사등과의</b> 현금등 지급·영수 / <b>국가·지방자치단체·공공단체와의</b> 지급·영수 / <b>자금세탁 위험성이 없는 일상적인</b> 지급·영수.</p>
+<p><b>★ 가상자산사업자는 이 예외에서 다시 빠진다</b>(시행령 제8조의4). 즉 가상자산사업자와의 현금거래는 <b>보고대상</b>이다.</p>
+<p>의무 주체 판단: 부동산 신탁사는 금융회사등에 해당하므로 위탁자에 대한 현금 지급이 1천만원 이상이면 <b>보고대상</b>. 반면 전자금융업자가 <b>은행 송금서비스를 이용해</b> 정산금을 지급한 경우는 <b>상대방에게 직접 현금등을 지급한 것이 아니어서</b> 보고의무가 없다.</p>
+<div class="trap">함정: "다른 금융회사와의 거래는 모두 제외" → 가상자산사업자는 제외의 예외다. 이 이중 부정이 오답 유도의 핵심이다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S27,S28">
+<h3>⑥ CTR 보고기한과 기한 말일 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>현금등을 지급하거나 영수한 날부터 <b>30일 이내</b>에 FIU에 보고(법 제4조의2①).</p>
+<p>30일의 <b>말일이 토요일 또는 공휴일</b>이면 <b>그 익일</b>로 만료한다(민법 제155조·제161조).</p>
+<div class="trap">함정: "그 전 영업일까지"가 대표 오답이다. 민법 원칙은 <b>익일</b>로 연장되는 것이지 앞당겨지지 않는다. 그리고 CTR 30일 ↔ STR 3영업일을 서로 바꿔 내는 문항이 매 회차 나온다.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>3. STR — 요건과 절차</h2>
+<div class="meta">"금액이 아니라 근거"가 모든 답의 축이다.</div>
+
+<div class="topic" data-qids="S3,S4,NX02,S12">
+<h3>⑦ 금액기준 없음 · 판단 기준 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>STR은 <b>기준금액이 없다</b>(2013년 폐지). 판단 기준은 <b>금융회사 직원이 자금세탁 등에 이용되고 있다고 의심할 만한 합당한 근거가 있는지</b>.</p>
+<p>고려 요소: 거래금액과 빈도 / 거래상대방의 특성 / 고객의 평소 거래패턴과의 괴리 / 자금의 출처와 목적.</p>
+<div class="trap">함정: <b>고객의 합법적인 정치적 성향·사상·신념</b>을 판단 요소로 끼워 넣는 선지 — 오답이다. 판단은 거래의 객관적 특성에 근거해야 한다. 고객의 나이·국적·거래 시간대도 그 자체로는 근거가 아니다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S20,S21,S37">
+<h3>⑧ 보고기한 · 긴급보고 · 서식 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>기한</b>: "의심되는 거래 보고대상 금융거래등"으로 <b>결정한 날부터 3영업일 이내</b>(감독규정 제3조). <b>거래일 기준이 아니다.</b></p>
+<p><b>긴급보고</b>: 전화·팩스로 먼저 보고했더라도, 이후 보고서식에 따라 <b>문서·전자기록매체 또는 온라인으로 다시 보고</b>해야 한다(감독규정 제12조).</p>
+<p><b>서식</b>: 별지 <b>제1호</b> 서식, 카지노사업자는 별지 <b>제1-1호</b> 서식(감독규정 제6조).</p>
+<div class="trap">함정: 기산점을 <b>거래일</b>로 바꾼 선지가 최다 오답이다. 긴급보고 후 "추가 조치 없이 종결"도 오답.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S5,S13,S36">
+<h3>⑨ 지체없이 · 내부 보고체계 · 재보고 <span class="imp">★★</span></h3>
+<div class="body">
+<p>의심거래를 인지하면 <b>지체없이 FIU에 보고</b>. 월말 일괄 보고, 고객 확인 후 결정, 내부 결재만 받고 생략 — 모두 불가.</p>
+<p>영업점 직원은 <b>내부 보고체계(컴플라이언스 부서 등)를 통해 즉시 보고</b>한다. 직원이 직접 FIU에 익명 신고하거나, 수사기관에 직접 신고하는 것이 아니다.</p>
+<p><b>재보고</b>: 이미 보고한 뒤에도 <b>같은 상대방이 다시 의심거래를 하고 있다고 의심되면 다시 보고</b>해야 한다(감독규정 제4조②).</p>
+<div class="trap">함정: "이미 보고했으므로 추가 보고 불필요", "거래를 종료하면 보고를 갈음" — 둘 다 오답. 거래 거절·종료와 STR 검토는 <b>별개의 의무</b>다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S38">
+<h3>⑩ 분할거래 판단 요소 <span class="imp">★★</span></h3>
+<div class="body">
+<p>고객이 기준금액을 회피하려고 금액을 분할한다고 의심되는 경우의 고려요소(감독규정 제4조①): <b>금융거래등의 상대방 수 · 거래횟수 · 거래 점포 수 · 거래 기간</b>.</p>
+<div class="trap">함정: 고객의 <b>학력·직업·연령</b> 같은 속성을 고려요소로 끼워 넣는다. 요소는 모두 <b>거래의 외형</b>에 관한 것이다.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>4. 보호와 금지 — 면책 · 누설금지 · 정보공유</h2>
+<div class="meta">FIU 유권해석 사례가 몰려 있는 구간. 사례번호까지 기억할 필요는 없고 결론만 잡으면 된다.</div>
+
+<div class="topic" data-qids="S6,NX04">
+<h3>⑪ 정보누설 금지(tipping-off) <span class="imp">★★★</span></h3>
+<div class="body">
+<p>보고 사실을 거래 상대방에게 알리는 행위는 <b>법령상 금지</b>되며 위반 시 제재 대상이다. 업무상 필요·상급자 승인·고객 요청 — 어떤 사유로도 정당화되지 않는다.</p>
+<p>기사형 정형: 직원이 고객에게 "보고 대상"임을 미리 알려 고객이 거래를 취소한 사안 → <b>누설금지 위반에 해당할 수 있고</b>, 나아가 <b>기준금액 회피를 위해 거래를 취소·조정한 정황 자체가 STR 검토 사유</b>가 된다. 거래 취소로 보고 대상이 소멸하지 않는다.</p>
+<div class="trap">함정: "고객 편의를 위한 안내였다", "CTR은 자동보고라 안내해도 무방" — 둘 다 오답.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S26,NX05">
+<h3>⑫ 면책과 증거능력 <span class="imp">★★</span></h3>
+<div class="body">
+<p><b>면책</b>: 고의 또는 중대한 과실로 거짓 보고한 경우가 아니라면, 금융회사는 거래 상대방 및 관계자에 대한 <b>손해배상책임을 지지 않는다</b>(법 제4조⑦). 면책되는 것은 손해배상책임이지 과태료·행정제재가 아니다.</p>
+<p><b>증거능력</b>: 의심거래보고 정보는 <b>재판에서 증거로 사용할 수 없다</b>. 수사 단서로 활용될 뿐이며, 보고자 보호와 제도의 안정적 운영을 위한 장치다.</p>
+<div class="trap">함정: "모든 책임이 면제된다" → 아니다. 면책 범위는 <b>손해배상</b>으로 한정된다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S22,S24,S25">
+<h3>⑬ 정보공유의 한계 — FIU 유권해석 3제 <span class="imp">★★</span></h3>
+<div class="body">
+<p>기준선은 하나다 — <b>법 제4조⑥의 "같은 금융회사등의 내부"에 해당하는가</b>.</p>
+<table><tr><th>상황</th><th>결론</th></tr>
+<tr><td>외국은행 국내지점 → <b>본점·지역본부</b>에 STR 정보 공유</td><td>본점·지역본부는 "같은 금융회사등의 내부"로 <b>간주되지 않아 공유 불가</b></td></tr>
+<tr><td><b>내부감사인</b>의 STR 관련 정보 열람</td><td>자금세탁 방지를 위한 내부 제공에 해당한다고 보기 어려우면 <b>열람 불가</b></td></tr>
+<tr><td>그룹 <b>Global Exit List</b> 등록</td><td>법인명·설립일 등 <b>공개정보만</b> 공유하면 원칙적으로 위반 아님. 다만 등록대상이 <b>STR 보고대상으로만 구성</b>되면 그 사실만으로 보고여부가 추정되어 <b>위반 소지</b></td></tr></table>
+<div class="trap">함정: "그룹 리스크 관리 목적이면 가능", "감사 목적이면 예외 없이 허용", "GEL 등록은 어떤 경우에도 위반이 아니다" — 전부 오답. 목적이 정당해도 <b>보고 여부가 추정되면</b> 걸린다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S10,NX07">
+<h3>⑭ 미보고 제재와 보존 자료 <span class="imp">★★</span></h3>
+<div class="body">
+<p>STR 미보고는 특금법상 <b>과태료 등 제재</b> 대상이 될 수 있다.</p>
+<p><b>보존 대상</b>: 의심거래보고서와 보고대상 금융거래 자료 / 의심되는 합당한 근거를 기록한 자료 / <b>미보고로 판단한 건에 대해 자금세탁 가능성을 조사한 기록</b> / 보고책임자의 경영진 보고서.</p>
+<p><b>보존 대상이 아닌 것</b>: FIU가 해당 보고를 법집행기관에 제공했는지 여부 — 금융회사가 알 수 없는 정보다.</p>
+<div class="trap">함정: <b>미보고 건의 조사 기록</b>을 보존 대상에서 빼는 선지. 보고하지 않기로 한 판단도 근거를 남겨야 한다.</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="sec"><h2>5. 두 제도의 관계 · 이상거래 · 사례형</h2>
+<div class="meta">조합형·개수형·기사형이 집중되는 마무리 구간.</div>
+
+<div class="topic" data-qids="NX06,NX03">
+<h3>⑮ CTR과 STR은 병존한다 <span class="imp">★★★</span></h3>
+<div class="body">
+<p>같은 거래에 대해 <b>CTR과 STR이 함께 이루어질 수 있다</b>. CTR은 금액 기준의 객관적 보고, STR은 의심 근거에 따른 보고로 취지가 다르기 때문이다.</p>
+<p>기준금액 미만으로 분할한다고 의심되면 <b>STR을 검토</b>해야 한다 — 개별 거래가 1천만원 미만이라는 사실은 면죄부가 아니다.</p>
+<p>개수형에서 반복되는 오답 명제: <b>"STR은 수사기관에 대한 고발의 성격을 가진다"</b> → FIU는 수사기관이 아니고, 보고는 고발이 아니라 <b>정보 제공</b>이다.</p>
+<div class="trap">개수형 함정: 물음이 "옳은 것"인지 <b>"옳지 않은 것"</b>인지를 놓쳐 개수를 반대로 세는 실수가 가장 잦다. 지문을 읽기 전에 물음의 방향부터 표시하고 시작할 것.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S8">
+<h3>⑯ 이상거래탐지시스템(FDS) <span class="imp">★</span></h3>
+<div class="body">
+<p>고객의 평소 거래패턴에서 벗어난 거래를 자동 탐지해 <b>STR 검토로 연결</b>하는 시스템.</p>
+<div class="trap">함정: "탐지된 모든 거래를 자동으로 STR 보고한다" → 오답. FDS 탐지는 <b>검토의 출발점</b>이지 보고 결정이 아니다.</div>
+</div>
+<div class="qrow"></div></div>
+
+<div class="topic" data-qids="S23,NX08">
+<h3>⑰ 사례형 — 손해 없음·면책과 보고의무는 별개 <span class="imp">★★★</span></h3>
+<div class="body">
+<p><b>보험사기 사례</b>: 보험증서 위변조 범죄사실을 인지해 수사기관에 신고했고 보험금 지급이 면책되어 <b>회사에 금전적 손해가 없더라도</b>, 범죄수익은닉규제법 제5조①에 따라 수사기관에 신고한 경우이므로 <b>법 제4조①3호에 해당해 STR 보고가 필요</b>하다.</p>
+<p><b>보험 조기해지 사례</b>: 일시납 보험료 거액 납입 후 <b>손실을 감수한 조기 해지 + 제3자 계좌 지급 요청 + 자금출처 소명 거부</b> — 보험을 이용한 자금세탁의 전형적 징후 조합이다. → <b>EDD 수행 + STR 검토</b>.</p>
+<div class="trap">함정: "해지는 계약자의 정당한 권리이므로 검토 불필요" / "보고 대상임을 미리 고지한 뒤 처리"(누설금지 위반) / "1천만원 초과이므로 CTR만 하면 충분"(해지환급금 지급은 현금거래가 아니고, STR은 금액 기준이 없다).</div>
+</div>
+<div class="qrow"></div></div>
+</div>
+
+<div class="foot">TPAC 정리노트 CTR·STR편 v1.0 (2026-08-21) · 근거: 특금법 제4조·제4조의2·시행령 제8조의2~8조의4·감독규정 제3·4·6·12조·민법 제155·161조·FIU 유권해석사례집 2.0<br>
+배지는 이 브라우저의 학습 기록 기준. 다른 기기 기록은 앱에서 "지금 동기화" 후 반영.</div>
+</div>
+
+<script>
+/* 앱 localStorage(aml-study-data) 읽어 문항 상태 배지 렌더 */
+(function(){
+  let st={};
+  try{ st = JSON.parse(localStorage.getItem('aml-study-data')||'{}'); }catch(e){}
+  const wn = st.wrongNotes||{};
+  const stateOf = id => {
+    const n = wn[id];
+    if(!n) return {cls:'',label:'미출제',wc:0};
+    if(!n.mastered) return {cls:'s0',label:'틀리는 중',wc:n.wrongCount||1};
+    return ((n.correctStreak||1)>=3) ? {cls:'s2',label:'안정',wc:n.wrongCount||0}
+                                     : {cls:'s1',label:'학습 중',wc:n.wrongCount||0};
+  };
+  let tot={red:0,amb:0,grn:0,none:0};
+  document.querySelectorAll('.topic').forEach(tp=>{
+    const ids=(tp.dataset.qids||'').split(',').map(x=>x.trim()).filter(Boolean);
+    const row=tp.querySelector('.qrow');
+    ids.forEach(id=>{
+      const s=stateOf(id);
+      if(s.cls==='s0')tot.red++;else if(s.cls==='s1')tot.amb++;else if(s.cls==='s2')tot.grn++;else tot.none++;
+      const chip=document.createElement('span');
+      chip.className='qchip '+s.cls;
+      chip.innerHTML='<span class="dot"></span>'+id+(s.wc>1?' <span class="wc">×'+s.wc+'</span>':'');
+      chip.title=s.label;
+      row.appendChild(chip);
+    });
+    const a=document.createElement('a');
+    a.className='solve'; a.href='./index.html?qids='+ids.join(',');
+    a.textContent='이 주제 풀기 ('+ids.length+')';
+    row.appendChild(a);
+  });
+  const bar=document.getElementById('sumbar');
+  if(tot.red+tot.amb+tot.grn>0){
+    bar.classList.add('on');
+    bar.innerHTML='<b>내 상태</b> — <span style="color:var(--red)">틀리는 중 '+tot.red
+      +'</span> · <span style="color:var(--amber)">학습 중 '+tot.amb
+      +'</span> · <span style="color:var(--green)">안정 '+tot.grn
+      +'</span> · 미출제 '+tot.none
+      +' <span style="color:var(--muted)">(빨간 주제부터 "이 주제 풀기")</span>';
+  }
+})();
+</script>
+</body>
+</html>
