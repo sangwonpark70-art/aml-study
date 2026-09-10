@@ -266,6 +266,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1c2b39">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="TPAC">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -1390,22 +1391,25 @@ function renderResult(el){
   else if(score1000>=700){tier='2등급';pass=true;}
   else if(score1000>=600){tier='3등급';pass=true;}
 
-  // 저장: 오답노트 갱신 + 기록 추가
-  qs.forEach(q=>{
-    const ok = session.answers[q.id]===q.a;
-    if(!ok){
-      appState.wrongNotes[q.id] = {
-        id:q.id, subject:q.subject, q:q.q, ch:q.ch, a:q.a, ex:q.ex,
-        chosen: session.answers[q.id], ts: Date.now()
-      };
-    } else if(appState.wrongNotes[q.id]){
-      delete appState.wrongNotes[q.id]; // 다시 맞히면 오답노트에서 제외(마스터)
-    }
-  });
-  const hist = { ts: Date.now(), subjectMode: quizSubject, total, correct, breakdown };
-  appState.history.push(hist);
-  saveState();
-  renderNotes(); renderMemo(); renderStats();
+  // 저장: 오답노트 갱신 + 기록 추가 (2026-09-10, 탭 전환 재렌더 시 history 중복저장 방지)
+  if(!session.resultSaved){
+    qs.forEach(q=>{
+      const ok = session.answers[q.id]===q.a;
+      if(!ok){
+        appState.wrongNotes[q.id] = {
+          id:q.id, subject:q.subject, q:q.q, ch:q.ch, a:q.a, ex:q.ex,
+          chosen: session.answers[q.id], ts: Date.now()
+        };
+      } else if(appState.wrongNotes[q.id]){
+        delete appState.wrongNotes[q.id]; // 다시 맞히면 오답노트에서 제외(마스터)
+      }
+    });
+    const hist = { ts: Date.now(), subjectMode: quizSubject, total, correct, breakdown };
+    appState.history.push(hist);
+    session.resultSaved = true;
+    saveState();
+    renderNotes(); renderMemo(); renderStats();
+  }
 
   let breakRows='';
   Object.keys(breakdown).forEach(s=>{
