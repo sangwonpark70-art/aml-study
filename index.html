@@ -262,6 +262,34 @@
     font-size:12.5px;color:var(--muted);text-decoration:underline;
     background:none;border:none;font-family:inherit;cursor:pointer;width:100%;padding:8px;
   }
+
+  /* ===== 사례형 (2026-10-03) ===== */
+  @media (max-width:400px){ nav.tabs button{font-size:13px;padding:12px 2px;} }
+  .casescene{font-size:14.5px;line-height:1.65;white-space:pre-wrap;background:#f7f8f5;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:6px 0 12px;}
+  .caseitems{font-size:14.5px;line-height:1.6;margin:0 0 12px;}
+  .caseitems > div{padding:6px 0;border-bottom:1px dashed var(--line);}
+  .caseitems > div:last-child{border-bottom:none;}
+  .casetimer{font-family:"SFMono-Regular",Consolas,monospace;font-size:12.5px;font-weight:700;color:var(--ink);white-space:nowrap;}
+  .casetimer.over{color:var(--fail);}
+  .casetimer.done{color:var(--pass);}
+  .caseex{white-space:pre-wrap;line-height:1.6;}
+  .casesrc{margin-top:8px;font-size:12px;color:var(--muted);}
+  .casekpi{display:flex;gap:8px;margin:4px 0 10px;}
+  .casekpi > div{flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:10px 4px;}
+  .casekpi b{display:block;font-size:20px;}
+  .casekpi span{font-size:11.5px;color:var(--muted);line-height:1.35;word-break:keep-all;display:block;}
+  #tab-case{word-break:keep-all;}
+  .casehint{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0 0 12px;}
+  .caserow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .caserow:last-child{border-bottom:none;}
+  .caseid{font-family:"SFMono-Regular",Consolas,monospace;font-weight:700;}
+  .casesub{flex:1;color:var(--muted);}
+  .casemeta{font-size:12px;color:var(--muted);white-space:nowrap;}
+  .casebadge{font-size:11px;font-weight:700;border-radius:4px;padding:2px 6px;white-space:nowrap;}
+  .casebadge.new{background:#eef0ea;color:var(--muted);}
+  .casebadge.ok{background:#eaf3ef;color:var(--pass);}
+  .casebadge.ng{background:#f8ece7;color:var(--fail);}
+  .overtxt{color:var(--fail);font-weight:700;}
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1c2b39">
@@ -291,6 +319,7 @@
 
 <nav class="tabs">
   <button class="tabbtn active" data-tab="quiz">모의고사</button>
+  <button class="tabbtn" data-tab="case">사례형</button>
   <button class="tabbtn" data-tab="notes">오답노트</button>
   <button class="tabbtn" data-tab="memo">핵심정리</button>
   <button class="tabbtn" data-tab="stats">통계</button>
@@ -299,6 +328,7 @@
 <div class="wrap">
 <main>
   <div id="tab-quiz"></div>
+  <div id="tab-case" style="display:none;"></div>
   <div id="tab-notes" style="display:none;"></div>
   <div id="tab-memo" style="display:none;"></div>
   <div id="tab-stats" style="display:none;"></div>
@@ -952,7 +982,7 @@ const SUBJECTS = Object.keys(WEIGHTS);
 
 /* ---------- 상태 ---------- */
 const STORAGE_KEY = 'aml-study-data';
-let appState = { askedIds: [], history: [], wrongNotes: {}, memos: [] };
+let appState = { askedIds: [], history: [], wrongNotes: {}, memos: [], caseLog: [] };
 let session = null; // {questions, index, answers:{}, locked:{}}
 let quizSubject = 'ALL';
 let quizCount = 20;
@@ -1050,6 +1080,7 @@ function ensureState(){
   if(!Array.isArray(appState.askedIds)) appState.askedIds = [];
   if(!Array.isArray(appState.history))  appState.history  = [];
   if(!Array.isArray(appState.memos))    appState.memos    = [];
+  if(!Array.isArray(appState.caseLog))  appState.caseLog  = [];
   if(!appState.wrongNotes || typeof appState.wrongNotes!=='object') appState.wrongNotes = {};
   return appState;
 }
@@ -1084,6 +1115,11 @@ function mergeState(a, b){
   });
   out.memos = Object.values(mmap).sort((x,y)=>y.ts-x.ts);
 
+  // caseLog: (qid, ts) 기준 합집합 — 풀이 기록은 지우지 않으므로 tombstone 불필요
+  const cmap = {};
+  [...(a.caseLog||[]), ...(b.caseLog||[])].forEach(r=>{ if(r && r.qid && r.ts) cmap[r.qid+'_'+r.ts] = r; });
+  out.caseLog = Object.values(cmap).sort((x,y)=>x.ts-y.ts);
+
   return out;
 }
 
@@ -1092,7 +1128,7 @@ async function loadState(){
   const local = localLoad();
   if(local) appState = local;
   ensureState();
-  renderQuiz(); renderNotes(); renderMemo(); renderStats();
+  renderQuiz(); renderNotes(); renderMemo(); renderStats(); renderCase();
 
   // 저장된 토큰이 있으면 자동으로 드라이브 동기화 시도
   const saved = (()=>{ try{ return JSON.parse(localStorage.getItem(TOKEN_KEY)||'null'); }catch(e){ return null; } })();
@@ -1129,7 +1165,7 @@ async function syncFromDrive(){
     }else{
       driveFileId = await driveCreate(appState);
     }
-    renderQuiz(); renderNotes(); renderMemo(); renderStats();
+    renderQuiz(); renderNotes(); renderMemo(); renderStats(); renderCase();
     setSyncState('드라이브 동기화됨', 'ok');
     setSyncBtn('지금 동기화');
   }catch(e){
@@ -1247,12 +1283,13 @@ function renderTab(t){
   else if(t==='notes') renderNotes();
   else if(t==='memo') renderMemo();
   else if(t==='stats') renderStats();
+  else if(t==='case') renderCase();
 }
 document.querySelectorAll('.tabbtn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    ['quiz','notes','memo','stats'].forEach(t=>{
+    ['quiz','case','notes','memo','stats'].forEach(t=>{
       document.getElementById('tab-'+t).style.display = (t===btn.dataset.tab)?'block':'none';
     });
     renderTab(btn.dataset.tab);
@@ -1393,17 +1430,9 @@ function renderResult(el){
 
   // 저장: 오답노트 갱신 + 기록 추가 (2026-09-10, 탭 전환 재렌더 시 history 중복저장 방지)
   if(!session.resultSaved){
-    qs.forEach(q=>{
-      const ok = session.answers[q.id]===q.a;
-      if(!ok){
-        appState.wrongNotes[q.id] = {
-          id:q.id, subject:q.subject, q:q.q, ch:q.ch, a:q.a, ex:q.ex,
-          chosen: session.answers[q.id], ts: Date.now()
-        };
-      } else if(appState.wrongNotes[q.id]){
-        delete appState.wrongNotes[q.id]; // 다시 맞히면 오답노트에서 제외(마스터)
-      }
-    });
+    /* 오답노트는 selectChoice 가 답 선택 시점에 이미 갱신한다(상태 3단·tombstone 포함).
+       여기서 다시 쓰면 wrongCount·correctStreak 가 지워지고, delete 로 tombstone 이 사라져
+       타 기기 병합 때 오답이 되살아난다 — 2026-10-03 제거 */
     const hist = { ts: Date.now(), subjectMode: quizSubject, total, correct, breakdown };
     appState.history.push(hist);
     session.resultSaved = true;
@@ -1517,6 +1546,7 @@ function renderMemo(){
   chips += '</div>';
 
   const wrongCount = Object.values(appState.wrongNotes).filter(n=>n.subject===memoFilter).length;
+  const activeCount = Object.values(appState.wrongNotes).filter(n=>n.subject===memoFilter && !n.mastered).length;
 
   const list = appState.memos.filter(m=>m.subject===memoFilter && !m.deleted).sort((a,b)=>b.ts-a.ts);
   let listHtml = '';
@@ -1545,8 +1575,8 @@ function renderMemo(){
     </div>
     <div class="card">
       <p class="sectionlabel">오답노트 기반 자동정리</p>
-      <p style="font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.5;">${memoFilter} 영역의 오답 ${wrongCount}건을 모아 핵심포인트로 정리해요.</p>
-      <button class="bigbtn" ${wrongCount===0?'disabled style="opacity:.4"':''} onclick="autoMemoFromWrong()">${memoFilter} 오답 ${wrongCount}건 자동정리 생성</button>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.5;">${memoFilter} 영역의 오답 이력 ${wrongCount}건(지금 틀리는 중 ${activeCount}건)을 모아 핵심포인트로 정리해요.</p>
+      <button class="bigbtn" ${wrongCount===0?'disabled style="opacity:.4"':''} onclick="autoMemoFromWrong()">${memoFilter} 오답 이력 ${wrongCount}건 자동정리 생성</button>
     </div>
     <div class="card">
       <p class="sectionlabel">직접 메모 — ${memoFilter}</p>
@@ -1674,10 +1704,274 @@ function renderStats(){
 }
 function resetAll(){
   if(!confirm('모든 모의고사 기록, 오답노트, 핵심정리를 삭제할까요? 되돌릴 수 없어요.')) return;
-  appState = { askedIds: [], history: [], wrongNotes: {}, memos: [] };
+  appState = { askedIds: [], history: [], wrongNotes: {}, memos: [], caseLog: [] };
   localSave();
   if(accessToken && driveFileId){ driveUpdate(driveFileId, appState).catch(e=>console.error(e)); }
   renderQuiz(); renderNotes(); renderMemo(); renderStats();
+}
+
+/* case_bank — 사례형 문항(원고: G 50.문서\\사례형문항\\). 근거: 특금법·시행령·감독규정·FIU 유권해석사례집 2.0 */
+const CASE_BANK = [
+ {
+  "id": "CS001",
+  "date": "2026-10-03",
+  "subject": "CTR·STR",
+  "t": "count",
+  "p": 15,
+  "scene": "갑은행 고객 A(개인)의 2026.10.16(금) 거래 내역이다.\n1) 09:10 강남지점 창구 — A 본인 계좌에 현금 600만원 입금\n2) 10:40 다른 지점 ATM — A 본인 계좌에 현금 300만원 입금\n3) 12:00 A가 현금 80만원으로 거래처 C 계좌에 무통장 송금\n4) 15:00 A 본인 계좌에서 현금 950만원 인출\n5) 16:30 A가 은행지로장표로 관리비·전기요금 120만원을 현금 납부\n※ 10.16 거래분을 보고할 경우, 거래일부터 30일째 되는 날은 일요일이다.",
+  "ask": "옳은 것은 모두 몇 개인가?",
+  "items": [
+   "ㄱ. 1)·2) 입금과 4) 인출을 합하면 1,850만원이므로 고액현금거래보고(CTR) 대상이다.",
+   "ㄴ. 2)는 다른 지점 ATM 거래이지만, 같은 은행·같은 실지명의이므로 1)과 합산한다.",
+   "ㄷ. 3)과 5)를 합산에서 빼면 받은(영수) 현금은 900만원이므로 CTR 보고 대상이 아니다.",
+   "ㄹ. A가 1천만원 기준을 피하려고 금액을 나눈다고 의심할 합당한 근거가 있으면, CTR 기준 미달이어도 FIU에 보고해야 한다.",
+   "ㅁ. 만약 CTR 대상이었다면, 보고기간 마지막 날이 일요일이므로 그 직전 영업일(금요일)까지 보고해야 한다."
+  ],
+  "ch": [
+   "1개",
+   "2개",
+   "3개",
+   "4개",
+   "5개"
+  ],
+  "a": 2,
+  "ex": "정답 3개(ㄴ·ㄷ·ㄹ).\nㄱ ✕ 지급한 금액과 영수한 금액은 각각 따로 합산한다. 입금과 인출을 더하지 않는다(시행령 제8조의2②).\nㄴ ○ 같은 금융회사·같은 실지명의·1거래일이면 지점·채널과 무관하게 합산한다(시행령 제8조의2②③).\nㄷ ○ 100만원 이하 원화 송금(무통장입금 포함)과 은행지로장표 수납 금액은 합산에서 뺀다(시행령 제8조의2④1호, 감독규정 제9조3호). 600+300=900만원 < 1천만원. 인출 950만원도 미달.\nㄹ ○ 기준 회피 목적의 분할이 의심되면 보고해야 한다(특금법 제4조의2②).\nㅁ ✕ 30일째가 토요일·공휴일이면 그 다음 날로 기한이 늦춰진다. 앞당기지 않는다(유권해석 사례12, 민법 제161조).",
+  "src": "특금법 제4조의2 · 시행령 제8조의2 · 감독규정 제9조 · 유권해석사례집 2.0 사례12"
+ },
+ {
+  "id": "CS002",
+  "date": "2026-10-03",
+  "subject": "국내제도",
+  "t": "combo",
+  "p": 15,
+  "scene": "을은행 보고책임자 K는 고객 D(법인)의 거래를 의심거래(STR)로 FIU에 보고했다. 이후 다음 일이 있었다.",
+  "ask": "법령·유권해석상 문제가 없는 것만을 모두 고른 것은?",
+  "items": [
+   "ㄱ. D 대표가 \"우리 거래가 보고됐냐\"고 따지자, 영업점장이 \"규정상 보고만 한 것이니 걱정 마시라\"고 답했다.",
+   "ㄴ. 자금세탁방지팀이 STR 보고서 중 '의심거래로 판단한 사유' 항목만 떼어 외환업무부에 넘겼고, 외환업무부는 이를 편집해 금융감독원에 '특이유형거래보고'로 냈다.",
+   "ㄷ. 내부감사부서가 '독립적 감사 수행'만을 이유로 STR 관련 정보 열람을 요구해, 그대로 열람시켰다.",
+   "ㄹ. 나중에 D의 자금은 정상 사업자금으로 밝혀졌다. D가 손해배상을 청구했지만, 은행이 고의나 중대한 과실로 거짓 보고한 것이 아니므로 배상책임이 없다.",
+   "ㅁ. D와 거래를 끝내면서 그룹 Global Exit List(GEL)에 법인명·설립일·법인등록번호(등기부 공개정보)만 등록했다. GEL에는 사기·뇌물·마약 등 여러 금융범죄 사유의 고객이 함께 등록되며, STR 여부는 공유되지 않는다.",
+   "ㅂ. 검찰이 FIU로부터 받은 D의 특정금융거래정보를 재판에 유죄 증거로 제출했다."
+  ],
+  "ch": [
+   "ㄹ",
+   "ㄹ, ㅁ",
+   "ㄷ, ㄹ, ㅁ",
+   "ㄴ, ㄹ, ㅁ",
+   "ㄹ, ㅁ, ㅂ"
+  ],
+  "a": 1,
+  "ex": "정답 ㄹ, ㅁ.\nㄱ ✕ 보고 사실을 거래 상대방을 포함한 다른 사람에게 누설하면 안 된다(특금법 제4조⑥). 「보고만 했다」는 말 자체가 누설이다.\nㄴ ✕ 자금세탁 방지 목적의 내부 제공이 아니면, 사유 항목만 떼어 다른 보고에 쓰는 것도 보고 사실 누설이 될 수 있다(사례6).\nㄷ ✕ 독립적 감사 목적만으로는 「자금세탁 방지를 위한 같은 금융회사 내부 제공」에 해당한다고 보기 어려워 열람할 수 없다(사례10). 「같은 회사 내부면 된다」가 함정.\nㄹ ○ 고의·중과실의 거짓 보고가 아니면 손해배상책임이 없다(특금법 제4조⑦).\nㅁ ○ 공개정보만 공유하고 STR 여부를 추정할 수 없다면 위반 아님. 단, 등록 대상이 STR 고객뿐이면 등록 사실만으로 추정돼 위반 소지(사례11).\nㅂ ✕ FIU가 제공한 특정금융거래정보는 재판에서 증거로 할 수 없다(특금법 제12조③).",
+  "src": "특금법 제4조⑥⑦ · 제12조③ · 유권해석사례집 2.0 사례6·10·11"
+ },
+ {
+  "id": "CS003",
+  "date": "2026-10-03",
+  "subject": "위험과 방법",
+  "t": "case",
+  "p": 15,
+  "scene": "병은행 고객 E사는 설립 4개월, 자본금 1천만원, 직원 2명, 업종은 '경영컨설팅'이다.\n최근 3주간 홍콩·싱가포르 소재 법인 4곳에서 '컨설팅 수수료' 명목으로 총 USD 85만 달러가 수입송금됐다.\n입금 당일~다음 날 국내 개인 계좌 12개로 나눠 이체됐고, 대표 F는 E사 계좌에서 4영업일 연속 매일 현금 900만원씩 인출했다.\n은행이 용역계약서를 요청하자 1쪽짜리 영문 합의서만 냈고, 용역 결과물은 제시하지 못했다.",
+  "ask": "이 사례에 대한 설명으로 가장 옳지 않은 것은?",
+  "items": [],
+  "ch": [
+   "해외 자금이 들어오자마자 여러 계좌로 쪼개 보내는 것은 자금 출처를 흐리는 반복(layering) 단계의 전형적 징후다.",
+   "컨설팅 같은 용역 거래는 선적서류 같은 실물 근거가 없어 대금이 적정한지 검증하기 어려워, 무역기반 자금세탁(TBML)에 악용되기 쉽다.",
+   "F의 현금 인출은 하루 1천만원 미만이라 CTR 대상은 아니지만, 기준 회피를 위한 분할이 의심되면 특금법 제4조의2제2항에 따른 보고를 검토해야 한다.",
+   "의심거래보고에는 기준금액이 없으므로, 의심할 합당한 근거가 있으면 개별 거래 금액과 관계없이 보고 대상이 된다.",
+   "해외 송금은행을 거쳐 전신송금 정보가 갖춰진 입금이므로, E사의 실제소유자나 자금 원천을 추가로 확인할 필요는 없다."
+  ],
+  "a": 4,
+  "ex": "정답 ⑤.\n⑤ ✕ 전신송금 정보는 송금인 정보일 뿐, 고객(E사)에 대한 확인을 대신하지 않는다. 자금세탁 우려가 있으면 기본 확인(신원·실제소유자)에 더해 거래 목적과 자금 원천까지 확인해야 한다(특금법 제5조의2①2호, 강화된 고객확인).\n① ○ 유입 직후 다수 계좌 분산은 반복(layering) 단계의 전형.\n② ○ 용역은 실물·선적 근거가 없어 가격 검증이 어렵다 — TBML 취약.\n③ ○ 하루 900만원은 CTR 미달(1거래일·동일 실지명의 합산). 회피 분할 의심 시 제4조의2② 보고.\n④ ○ STR은 금액 기준이 없다(특금법 제4조①).\n함정: 「서류가 갖춰졌다」를 「확인이 끝났다」로 바꿔 읽게 만드는 선지.",
+  "src": "특금법 제4조① · 제4조의2② · 제5조의2①2호 · 시행령 제8조의2"
+ }
+];
+
+/* ===================================================================
+   사례형 모드 (case_mode, 2026-10-03)
+   - 기존 BANK(211)와 분리: askedIds·wrongNotes·history 를 건드리지 않는다
+   - 문항별 풀이시간 기록, 첫 풀이 정답률을 따로 집계(재풀이는 암기 효과가 섞임)
+   - 기록은 appState.caseLog [{qid, ts, chosen, ok, sec}] — mergeState 가 합집합 병합
+   =================================================================== */
+const CASE_TARGET_SEC = 120;
+let caseSession = null;   /* {questions, index, answers:{}, secs:{}, start, mode} */
+let caseTimerId = null;
+
+function caseLog(){ ensureState(); return appState.caseLog; }
+function caseAttempts(qid){ return caseLog().filter(r=>r.qid===qid).sort((x,y)=>x.ts-y.ts); }
+function caseLast(qid){ const a = caseAttempts(qid); return a.length ? a[a.length-1] : null; }
+function fmtSec(s){ s = Math.max(0, Math.round(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+
+function caseStats(){
+  const log = caseLog();
+  const firsts = CASE_BANK.map(q=>caseAttempts(q.id)[0]).filter(Boolean);
+  const firstOk = firsts.filter(r=>r.ok).length;
+  const allOk = log.filter(r=>r.ok).length;
+  const avg = log.length ? log.reduce((s,r)=>s+(r.sec||0),0)/log.length : 0;
+  const over = log.filter(r=>(r.sec||0) > CASE_TARGET_SEC).length;
+  const bySubj = {};
+  firsts.forEach(r=>{
+    const q = CASE_BANK.find(b=>b.id===r.qid); if(!q) return;
+    if(!bySubj[q.subject]) bySubj[q.subject] = {ok:0,n:0};
+    bySubj[q.subject].n++; if(r.ok) bySubj[q.subject].ok++;
+  });
+  return { firsts: firsts.length, firstOk, total: log.length, allOk, avg, over, bySubj };
+}
+
+function stopCaseTimer(){ if(caseTimerId){ clearInterval(caseTimerId); caseTimerId = null; } }
+function tickCaseTimer(){
+  const el = document.getElementById('caseTimer');
+  if(!el || !caseSession || !caseSession.start){ stopCaseTimer(); return; }
+  const s = (Date.now() - caseSession.start)/1000;
+  el.textContent = fmtSec(s) + ' / ' + fmtSec(CASE_TARGET_SEC);
+  el.className = 'casetimer' + (s > CASE_TARGET_SEC ? ' over' : '');
+}
+
+function renderCase(){
+  const el = document.getElementById('tab-case');
+  if(!el) return;
+  if(caseSession){ renderCaseSession(el); return; }
+  stopCaseTimer();
+  const st = caseStats();
+  const unseen = CASE_BANK.filter(q=>!caseLast(q.id));
+  const wrongs = CASE_BANK.filter(q=>{ const l = caseLast(q.id); return l && !l.ok; });
+  const pct = (a,b)=> b ? Math.round(a/b*100)+'%' : '—';
+
+  let subjRows = '';
+  Object.keys(st.bySubj).forEach(s=>{
+    const b = st.bySubj[s]; const p = Math.round(b.ok/b.n*100);
+    subjRows += `<div class="breakrow"><span>${s}</span><div class="breakbar"><div style="width:${p}%"></div></div><span>${b.ok}/${b.n}</span></div>`;
+  });
+
+  let list = '';
+  CASE_BANK.slice().reverse().forEach(q=>{
+    const att = caseAttempts(q.id); const l = att[att.length-1];
+    const mark = !l ? '<span class="casebadge new">안 풂</span>'
+      : (l.ok ? '<span class="casebadge ok">정답</span>' : '<span class="casebadge ng">오답</span>');
+    const meta = l ? `${fmtSec(l.sec)} · ${att.length}회` : q.date.slice(5).replace('-','/') + ' 추가';
+    list += `<div class="caserow">${mark}<span class="caseid">${q.id}</span><span class="casesub">${q.subject} · ${QT_LABEL[q.t]||q.t}</span><span class="casemeta">${meta}</span></div>`;
+  });
+
+  el.innerHTML = `
+    <div class="card">
+      <p class="sectionlabel">사례형 — 실전 형식 훈련 (문항당 목표 ${fmtSec(CASE_TARGET_SEC)})</p>
+      <div class="casekpi">
+        <div><b>${pct(st.firstOk, st.firsts)}</b><span>첫 풀이 정답률<br>(${st.firstOk}/${st.firsts})</span></div>
+        <div><b>${st.total ? fmtSec(st.avg) : '—'}</b><span>평균 풀이시간<br>(${st.total}회)</span></div>
+        <div><b>${pct(st.over, st.total)}</b><span>목표시간 초과<br>(${st.over}회)</span></div>
+      </div>
+      <p class="casehint">실력 지표는 <b>첫 풀이 정답률</b>입니다. 다시 푼 결과는 외운 효과가 섞여 따로 봅니다(재풀이 포함 ${pct(st.allOk, st.total)}).</p>
+      <button class="bigbtn" ${unseen.length?'':'disabled style="opacity:.4"'} onclick="startCase('new')">새 문항 풀기 (${unseen.length})</button>
+      <div class="navrow" style="margin-top:8px;">
+        <button class="bigbtn secondary" ${wrongs.length?'':'disabled style="opacity:.4"'} onclick="startCase('wrong')">틀린 문항 (${wrongs.length})</button>
+        <button class="bigbtn secondary" onclick="startCase('all')">전체 다시 (${CASE_BANK.length})</button>
+      </div>
+    </div>
+    ${subjRows ? `<div class="card"><p class="sectionlabel">영역별 첫 풀이 결과</p>${subjRows}</div>` : ''}
+    <div class="card"><p class="sectionlabel">문항 목록 (최신순)</p>${list}</div>
+  `;
+}
+
+function startCase(mode){
+  let qs;
+  if(mode==='new') qs = CASE_BANK.filter(q=>!caseLast(q.id));
+  else if(mode==='wrong') qs = CASE_BANK.filter(q=>{ const l = caseLast(q.id); return l && !l.ok; });
+  else qs = CASE_BANK.slice();
+  if(!qs.length) return;
+  /* 사례형은 선지 순서를 섞지 않는다 — 개수형(1개~5개)·조합형은 순서 자체가 의미이고, 해설이 번호로 설명한다 */
+  caseSession = { questions: qs, index: 0, answers: {}, secs: {}, start: null, mode };
+  renderCase();
+}
+
+function renderCaseSession(el){
+  const s = caseSession;
+  if(s.index >= s.questions.length){ stopCaseTimer(); renderCaseResult(el); return; }
+  const q = s.questions[s.index];
+  const answered = s.answers[q.id] !== undefined;
+  if(!answered && !s.start) s.start = Date.now();
+  const pct = Math.round(s.index/s.questions.length*100);
+
+  let items = '';
+  if(q.items && q.items.length){
+    items = '<div class="caseitems">' + q.items.map(t=>`<div>${escapeHtml(t)}</div>`).join('') + '</div>';
+  }
+  let ch = '';
+  q.ch.forEach((c,i)=>{
+    let cls = 'choice';
+    if(answered){ if(i===q.a) cls+=' correct'; else if(i===s.answers[q.id]) cls+=' wrong'; }
+    ch += `<button class="${cls}" ${answered?'data-locked="1"':''} onclick="selectCase('${q.id}',${i})"><span class="num">${'①②③④⑤'[i]}</span><span>${escapeHtml(c)}</span></button>`;
+  });
+  const timeHtml = answered
+    ? `<span class="casetimer ${s.secs[q.id]>CASE_TARGET_SEC?'over':'done'}">${fmtSec(s.secs[q.id])} 소요</span>`
+    : `<span class="casetimer" id="caseTimer">0:00 / ${fmtSec(CASE_TARGET_SEC)}</span>`;
+
+  el.innerHTML = `
+    <div class="progresswrap">
+      <span>${s.index+1} / ${s.questions.length}</span>
+      <div class="progressbar"><div style="width:${pct}%"></div></div>
+      ${timeHtml}
+    </div>
+    <div class="card">
+      <span class="qtag">${q.subject} · ${q.id}</span>
+      <span class="qtag">${QT_LABEL[q.t]||q.t} · ${q.p}점</span>
+      <div class="casescene">${escapeHtml(q.scene)}</div>
+      ${items}
+      <p class="qtext">${escapeHtml(q.ask)}</p>
+      ${ch}
+      ${answered?`<div class="explain caseex">${escapeHtml(q.ex)}<div class="casesrc">근거: ${escapeHtml(q.src)}</div></div>`:''}
+    </div>
+    <div class="navrow">
+      <button class="bigbtn secondary" onclick="exitCase()">중단</button>
+      <button class="bigbtn" ${answered?'':'disabled style="opacity:.4"'} onclick="nextCase()">${s.index+1===s.questions.length?'결과 보기':'다음 문제'}</button>
+    </div>
+  `;
+  stopCaseTimer();
+  if(!answered){ tickCaseTimer(); caseTimerId = setInterval(tickCaseTimer, 1000); }
+}
+
+function selectCase(qid, idx){
+  const s = caseSession;
+  if(!s || s.answers[qid] !== undefined) return;
+  const q = s.questions.find(x=>x.id===qid); if(!q) return;
+  const sec = Math.round((Date.now() - (s.start||Date.now()))/1000);
+  s.answers[qid] = idx; s.secs[qid] = sec;
+  stopCaseTimer();
+  caseLog().push({ qid, ts: Date.now(), chosen: idx, ok: idx===q.a, sec });
+  saveState();
+  renderCase();
+}
+function nextCase(){
+  const s = caseSession; const q = s.questions[s.index];
+  if(s.answers[q.id] === undefined) return;
+  s.index++; s.start = null;
+  renderCase();
+}
+function exitCase(){ stopCaseTimer(); caseSession = null; renderCase(); }
+
+function renderCaseResult(el){
+  const s = caseSession; const qs = s.questions;
+  let got = 0, tot = 0, ok = 0, secSum = 0;
+  let rows = '';
+  qs.forEach(q=>{
+    const good = s.answers[q.id] === q.a;
+    tot += q.p; if(good){ got += q.p; ok++; }
+    secSum += s.secs[q.id]||0;
+    const over = (s.secs[q.id]||0) > CASE_TARGET_SEC;
+    rows += `<div class="breakrow"><span>${good?'○':'✕'} ${q.id}</span><span>${q.subject}</span><span class="${over?'overtxt':''}">${fmtSec(s.secs[q.id])}</span></div>`;
+  });
+  el.innerHTML = `
+    <div class="resulthead"><span class="big">사례형 ${qs.length}문항 · ${got}/${tot}점</span></div>
+    <div class="card">
+      <div class="casekpi">
+        <div><b>${ok}/${qs.length}</b><span>정답</span></div>
+        <div><b>${fmtSec(secSum/qs.length)}</b><span>평균 시간</span></div>
+        <div><b>${fmtSec(secSum)}</b><span>총 시간</span></div>
+      </div>
+      ${rows}
+      <p class="casehint">목표: 문항당 ${fmtSec(CASE_TARGET_SEC)} 이내. 실전은 100문항 120분(평균 1:12).</p>
+    </div>
+    <button class="bigbtn" onclick="exitCase()">사례형 처음으로</button>
+  `;
 }
 
 /* ---------- 초기화 ---------- */
