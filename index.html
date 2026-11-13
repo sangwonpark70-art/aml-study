@@ -290,6 +290,11 @@
   .casebadge.ok{background:#eaf3ef;color:var(--pass);}
   .casebadge.ng{background:#f8ece7;color:var(--fail);}
   .overtxt{color:var(--fail);font-weight:700;}
+  .qtag.revok{color:var(--pass);border-color:var(--pass);}
+  .qtag.revng{color:var(--fail);border-color:var(--fail);}
+  .revbar{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);}
+  .revbtn.ng{color:var(--fail);}
+  .revnote{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:8px;border:1px solid var(--line);border-radius:8px;margin:0 0 8px;}
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1c2b39">
@@ -983,7 +988,7 @@ const SUBJECTS = Object.keys(WEIGHTS);
 
 /* ---------- 상태 ---------- */
 const STORAGE_KEY = 'aml-study-data';
-let appState = { askedIds: [], history: [], wrongNotes: {}, memos: [], caseLog: [] };
+let appState = { askedIds: [], history: [], wrongNotes: {}, memos: [], caseLog: [], caseReview: {} };
 let session = null; // {questions, index, answers:{}, locked:{}}
 let quizSubject = 'ALL';
 let quizCount = 20;
@@ -1082,6 +1087,7 @@ function ensureState(){
   if(!Array.isArray(appState.history))  appState.history  = [];
   if(!Array.isArray(appState.memos))    appState.memos    = [];
   if(!Array.isArray(appState.caseLog))  appState.caseLog  = [];
+  if(!appState.caseReview || typeof appState.caseReview!=='object' || Array.isArray(appState.caseReview)) appState.caseReview = {};
   if(!appState.wrongNotes || typeof appState.wrongNotes!=='object') appState.wrongNotes = {};
   return appState;
 }
@@ -1120,6 +1126,13 @@ function mergeState(a, b){
   const cmap = {};
   [...(a.caseLog||[]), ...(b.caseLog||[])].forEach(r=>{ if(r && r.qid && r.ts) cmap[r.qid+'_'+r.ts] = r; });
   out.caseLog = Object.values(cmap).sort((x,y)=>x.ts-y.ts);
+
+  // caseReview: 문항별 사람 검토 {qid:{ok, note, ts}} — 같은 문항은 최신 ts 우선(다시 누르면 덮어씀)
+  out.caseReview = {};
+  [a.caseReview||{}, b.caseReview||{}].forEach(m=>Object.keys(m).forEach(k=>{
+    const r = m[k]; if(!r || !r.ts) return;
+    const prev = out.caseReview[k]; if(!prev || r.ts > prev.ts) out.caseReview[k] = r;
+  }));
 
   return out;
 }
@@ -1705,7 +1718,7 @@ function renderStats(){
 }
 function resetAll(){
   if(!confirm('모든 모의고사 기록, 오답노트, 핵심정리를 삭제할까요? 되돌릴 수 없어요.')) return;
-  appState = { askedIds: [], history: [], wrongNotes: {}, memos: [], caseLog: [] };
+  appState = { askedIds: [], history: [], wrongNotes: {}, memos: [], caseLog: [], caseReview: {} };
   localSave();
   if(accessToken && driveFileId){ driveUpdate(driveFileId, appState).catch(e=>console.error(e)); }
   renderQuiz(); renderNotes(); renderMemo(); renderStats();
@@ -1725,6 +1738,43 @@ let caseSession = null;   /* {questions, index, answers:{}, secs:{}, start, mode
 let caseTimerId = null;
 
 function caseLog(){ ensureState(); return appState.caseLog; }
+/* 사람 검토(2026-11-13): 저장소 rv=true 이거나 앱에서 「이상 없음」을 누른 문항은 검토 끝 */
+function caseReview(qid){ ensureState(); return appState.caseReview[qid] || null; }
+function reviewTag(q){
+  const r = caseReview(q.id);
+  if(r && r.ok===false) return '<span class="qtag revng">이상 있음</span>';
+  if(q.rv || (r && r.ok)) return '<span class="qtag revok">확인함</span>';
+  return '<span class="qtag">검토 전</span>';
+}
+let caseIssueOpen = null;
+function markReview(qid, ok){
+  if(ok===false){ caseIssueOpen = qid; renderCase(); const t=document.getElementById('revNote'); if(t) t.focus(); return; }
+  ensureState(); appState.caseReview[qid] = { ok:true, ts: Date.now() };
+  caseIssueOpen = null; saveState(); renderCase();
+}
+function saveIssue(qid){
+  const t = document.getElementById('revNote'); const note = (t && t.value || '').trim();
+  if(!note){ if(t) t.placeholder = '무엇이 이상한지 한 줄 적어 주세요(필수)'; return; }
+  ensureState(); appState.caseReview[qid] = { ok:false, note, ts: Date.now() };
+  caseIssueOpen = null; saveState(); renderCase();
+}
+function reviewReportText(){
+  const ok=[], ng=[];
+  CASE_BANK.forEach(q=>{ const r = caseReview(q.id); if(!r) return; if(r.ok) ok.push(q.id); else ng.push(q.id+' — '+r.note); });
+  return '[→ 학습 창] 사례형 검토 결과 ('+new Date(Date.now()+9*3600e3).toISOString().slice(0,10)+')\n'
+    + '이상 없음 '+ok.length+'건: '+(ok.join(', ')||'없음')+'\n'
+    + '이상 있음 '+ng.length+'건'+(ng.length?':\n- '+ng.join('\n- '):'');
+}
+function copyReviewReport(){
+  const txt = reviewReportText();
+  const done = ()=>{ const b=document.getElementById('revCopyBtn'); if(b) b.textContent='복사됨 — 학습 창에 붙여 주세요'; };
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done, ()=>fallbackCopy(txt, done)); }
+  else fallbackCopy(txt, done);
+}
+function fallbackCopy(txt, done){
+  const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){} document.body.removeChild(ta);
+}
 function caseAttempts(qid){ return caseLog().filter(r=>r.qid===qid).sort((x,y)=>x.ts-y.ts); }
 function caseLast(qid){ const a = caseAttempts(qid); return a.length ? a[a.length-1] : null; }
 function fmtSec(s){ s = Math.max(0, Math.round(s||0)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
@@ -1777,7 +1827,7 @@ function renderCase(){
       : (l.ok ? '<span class="casebadge ok">정답</span>' : '<span class="casebadge ng">오답</span>');
     const meta = l ? `${fmtSec(l.sec)} · ${att.length}회` : q.date.slice(5).replace('-','/') + ' 추가';
     const isNew = !l && q.date === new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
-    list += `<div class="caserow">${isNew?'<span class="casebadge ng">오늘</span>':''}${mark}<span class="caseid">${q.id}</span><span class="casesub">${q.subject} · ${QT_LABEL[q.t]||q.t}</span><span class="casemeta">${meta}</span></div>`;
+    list += `<div class="caserow">${isNew?'<span class="casebadge ng">오늘</span>':''}${mark}<span class="caseid">${q.id}</span><span class="casesub">${q.subject} · ${QT_LABEL[q.t]||q.t}</span>${(()=>{const r=caseReview(q.id); return r&&r.ok===false?'<span class="casebadge ng">이상</span>':'';})()}<span class="casemeta">${meta}</span></div>`;
   });
 
   el.innerHTML = `
@@ -1795,6 +1845,10 @@ function renderCase(){
         <button class="bigbtn secondary" onclick="startCase('all')">전체 다시 (${CASE_BANK.length})</button>
       </div>
     </div>
+    ${(()=>{ const n=CASE_BANK.length; const rv=CASE_BANK.filter(q=>q.rv||caseReview(q.id)).length; const ng=CASE_BANK.filter(q=>{const r=caseReview(q.id);return r&&r.ok===false;}).length;
+      const mine=Object.keys(appState.caseReview||{}).length;
+      return `<div class="card"><p class="sectionlabel">문항 검토</p><p class="casehint">검토 끝 ${rv}/${n} · 이상 있음 ${ng}건. 문항을 풀고 해설 아래에서 「이상 없음/이상 있음」을 누릅니다. 결과를 복사해 학습 창에 붙이면 문항을 확정(이상 없음)하거나 고칩니다.</p>
+      <button id="revCopyBtn" class="bigbtn secondary" ${mine?'':'disabled style="opacity:.4"'} onclick="copyReviewReport()">검토 결과 복사 (${mine}건)</button></div>`; })()}
     ${subjRows ? `<div class="card"><p class="sectionlabel">영역별 첫 풀이 결과</p>${subjRows}</div>` : ''}
     <div class="card"><p class="sectionlabel">문항 목록 (최신순)</p>${list}</div>
   `;
@@ -1841,12 +1895,13 @@ function renderCaseSession(el){
     </div>
     <div class="card">
       <span class="qtag">${q.subject} · ${q.id}</span>
-      <span class="qtag">${QT_LABEL[q.t]||q.t} · ${q.p}점</span>${q.rv?'':'<span class="qtag">검토 전</span>'}
+      <span class="qtag">${QT_LABEL[q.t]||q.t} · ${q.p}점</span>${reviewTag(q)}
       <div class="casescene">${escapeHtml(q.scene)}</div>
       ${items}
       <p class="qtext">${escapeHtml(q.ask)}</p>
       ${ch}
       ${answered?`<div class="explain caseex">${escapeHtml(q.ex)}<div class="casesrc">근거: ${escapeHtml(q.src)}</div></div>`:''}
+      ${answered?reviewBar(q):''}
     </div>
     <div class="navrow">
       <button class="bigbtn secondary" onclick="exitCase()">중단</button>
@@ -1855,6 +1910,16 @@ function renderCaseSession(el){
   `;
   stopCaseTimer();
   if(!answered){ tickCaseTimer(); caseTimerId = setInterval(tickCaseTimer, 1000); }
+}
+
+function reviewBar(q){
+  const r = caseReview(q.id);
+  const state = r ? (r.ok ? '이상 없음으로 표시함' : '이상 있음: '+escapeHtml(r.note)) : '문항에 이상이 없나요?';
+  const form = caseIssueOpen===q.id
+    ? `<textarea id="revNote" class="revnote" rows="2" placeholder="무엇이 이상한지 한 줄(정답·해설·근거·지문)"></textarea>
+       <div class="navrow"><button class="bigbtn secondary" onclick="caseIssueOpen=null;renderCase()">취소</button><button class="bigbtn" onclick="saveIssue('${q.id}')">이상 있음 저장</button></div>`
+    : `<div class="navrow"><button class="bigbtn secondary revbtn" onclick="markReview('${q.id}',true)">이상 없음</button><button class="bigbtn secondary revbtn ng" onclick="markReview('${q.id}',false)">이상 있음</button></div>`;
+  return `<div class="revbar"><p class="casehint" style="margin:0 0 6px;">검토 — ${state}</p>${form}</div>`;
 }
 
 function selectCase(qid, idx){
